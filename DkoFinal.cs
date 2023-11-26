@@ -1,19 +1,25 @@
-﻿using Microsoft.Xna.Framework;
+﻿using DKoFinal.Scenes;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace DKoFinal
 {
-    public class Game1 : Game
+    public class DkoFinal : Game
     {
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        public GraphicsDeviceManager _graphics;
+        public SpriteBatch _spriteBatch;
 
-        public Game1()
+        private MainScene mainScene;
+
+        public DkoFinal()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+
+            _graphics.PreferredBackBufferWidth = 64 * 14;
+            _graphics.PreferredBackBufferHeight = 64 * 8;
         }
 
         protected override void Initialize()
@@ -27,7 +33,9 @@ namespace DKoFinal
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            mainScene = new MainScene(this, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
+            mainScene.Display();
+            this.Components.Add(mainScene);
         }
 
         protected override void Update(GameTime gameTime)

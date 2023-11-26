@@ -1,3 +1,3 @@
 ﻿
-using var game = new DKoFinal.Game1();
+using var game = new DKoFinal.DkoFinal();
 game.Run();
