@@ -25,7 +25,7 @@
 /processorParam:TextureFormat=Color
 /build:MainScene/Blue.png
 
-#begin MainScene/GameTitle_1.png
+#begin MainScene/GameTitle.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -35,5 +35,5 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:MainScene/GameTitle_1.png;MainScene/GameTitle.png
+/build:MainScene/GameTitle.png
 

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Taskbar;
 
 namespace DKoFinal
 {
@@ -33,7 +34,8 @@ namespace DKoFinal
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            mainScene = new MainScene(this, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
+            Texture2D titleImage = this.Content.Load<Texture2D>("MainScene/GameTitle");
+            mainScene = new MainScene(this, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight, new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight/3), new Rectangle(0,0, titleImage.Width, titleImage.Height), Color.White, new Vector2(titleImage.Width/2, titleImage.Height/2), 0.0f, 0.3f, SpriteEffects.None, 0.0f);
             mainScene.Display();
             this.Components.Add(mainScene);
         }

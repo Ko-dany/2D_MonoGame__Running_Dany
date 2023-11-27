@@ -12,12 +12,21 @@ namespace DKoFinal.Scenes
     {
         SpriteBatch spriteBatch;
         Texture2D mainBackgroundImg;
+
+        BackgroundRenderer mainBackground;
+
         Texture2D mainTitle;
+        Vector2 titlePosition;
+        Rectangle titleRectangle;
+        Color color;
+        Vector2 titleOrigin;
+        float rotation;
+        float scale;
+        SpriteEffects spriteEffect;
+        float layerDepth;
 
-        int backgroundWidth;
-        int backgroundHeight;
-
-        public MainScene(Game game, int backgroundWidth, int backgroundHeight) : base(game)
+        public MainScene(Game game, int backgroundWidth, int backgroundHeight, Vector2 titlePosition, Rectangle titleRectangle, Color color,
+        Vector2 titleOrigin, float rotation,float scale, SpriteEffects spriteEffect, float layerDepth) : base(game)
         {
             DkoFinal dkoFinal = (DkoFinal)game;
             spriteBatch = dkoFinal._spriteBatch;
@@ -25,20 +34,25 @@ namespace DKoFinal.Scenes
             mainBackgroundImg = dkoFinal.Content.Load<Texture2D>("MainScene/Blue");
             mainTitle = dkoFinal.Content.Load<Texture2D>("MainScene/GameTitle");
 
-            this.backgroundWidth = backgroundWidth;
-            this.backgroundHeight = backgroundHeight;
+            mainBackground = new BackgroundRenderer(spriteBatch, mainBackgroundImg, backgroundWidth, backgroundHeight);
+
+            this.titlePosition = titlePosition;
+            this.titleRectangle = titleRectangle;
+            this.color = color;
+            this.titleOrigin = titleOrigin;
+            this.rotation = rotation;
+            this.scale = scale;
+            this.spriteEffect = spriteEffect;
+            this.layerDepth = layerDepth;
         }
         public override void Draw(GameTime gameTime)
         {
+            // Drawing the background
+            mainBackground.Draw();
+
             spriteBatch.Begin();
-            for(int y=0; y< backgroundHeight/mainBackgroundImg.Height; y++)
-            {
-                for(int x=0; x<backgroundWidth/mainBackgroundImg.Width; x++)
-                {
-                    spriteBatch.Draw(mainBackgroundImg, new Vector2(x*mainBackgroundImg.Width, y*mainBackgroundImg.Height), Color.White);
-                }
-            }
-            spriteBatch.Draw(mainTitle, new Vector2((backgroundWidth - mainTitle.Width)/2,(backgroundHeight - mainTitle.Height)/2), Color.White);
+            // Drawing the title
+            spriteBatch.Draw(mainTitle, titlePosition, titleRectangle, color, rotation, titleOrigin, scale, spriteEffect, layerDepth);            
             spriteBatch.End();
 
             base.Draw(gameTime);

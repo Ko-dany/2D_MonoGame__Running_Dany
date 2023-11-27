@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DKoFinal.Scenes
 {
-    internal class GameScene:DrawableGameComponent
+    internal class GameScene : DrawableGameComponent
     {
         public List<GameComponent> Components { get; set; }
 
