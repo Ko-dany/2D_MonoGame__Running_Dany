@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.ComponentModel.Design.ObjectSelectorEditor;
 
 namespace DKoFinal.Scenes
 {
@@ -14,6 +15,7 @@ namespace DKoFinal.Scenes
         Texture2D mainBackgroundImg;
 
         BackgroundRenderer mainBackground;
+        MenuRenderer menuSelection;
 
         Texture2D mainTitle;
         Vector2 titlePosition;
@@ -25,8 +27,7 @@ namespace DKoFinal.Scenes
         SpriteEffects spriteEffect;
         float layerDepth;
 
-        ButtonRenderer mainButton;
-        SpriteFont font;
+        SpriteFont regular, selected;
 
         public MainScene(Game game, int backgroundWidth, int backgroundHeight, Vector2 titlePosition, Rectangle titleRectangle, Color color,
         Vector2 titleOrigin, float rotation,float scale, SpriteEffects spriteEffect, float layerDepth) : base(game)
@@ -36,10 +37,12 @@ namespace DKoFinal.Scenes
 
             mainBackgroundImg = dkoFinal.Content.Load<Texture2D>("MainScene/Blue");
             mainTitle = dkoFinal.Content.Load<Texture2D>("MainScene/GameTitle");
-            font = dkoFinal.Content.Load<SpriteFont>("Fonts/classic");
+
+            regular = dkoFinal.Content.Load<SpriteFont>("Fonts/classic");
+            selected = dkoFinal.Content.Load<SpriteFont>("Fonts/classic");
+
 
             mainBackground = new BackgroundRenderer(spriteBatch, mainBackgroundImg, backgroundWidth, backgroundHeight);
-            mainButton = new ButtonRenderer(font, new Vector2(backgroundWidth / 2, backgroundHeight / 2), "START", Color.White, Color.AliceBlue);
 
             this.titlePosition = titlePosition;
             this.titleRectangle = titleRectangle;
@@ -49,12 +52,14 @@ namespace DKoFinal.Scenes
             this.scale = scale;
             this.spriteEffect = spriteEffect;
             this.layerDepth = layerDepth;
+
+            menuSelection = new MenuRenderer(dkoFinal, spriteBatch, regular, selected, new Vector2(100, 100), Color.White, Color.Black, new string[] { "START", "HELP", "OPTIONS", "EXIT" });
+            this.Components.Add(menuSelection);
         }
         public override void Draw(GameTime gameTime)
         {
             // Drawing the background
             mainBackground.Draw();
-            mainButton.Draw(spriteBatch);
 
             spriteBatch.Begin();
             // Drawing the title

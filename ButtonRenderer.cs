@@ -5,23 +5,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MonoGame.Extended;
 
 namespace DKoFinal
 {
     internal class ButtonRenderer
     {
-        private SpriteFont font;
-        private Vector2 position;
-        private string text;
-        private Color backgroundColor;
-        private Color borderColor;
+        SpriteFont font;
+        Vector2 position;
+        string text;
+        Color textColor;
+        Color backgroundColor;
+        Color borderColor;
 
-        public ButtonRenderer(SpriteFont font, Vector2 position, string text, Color backgroundColor, Color borderColor)
+
+        public ButtonRenderer(SpriteFont font, Vector2 position, string text, Color textColor, Color backgroundColor, Color borderColor)
         {
             this.font = font;
             this.position = position;
             this.text = text;
+            this.textColor = textColor;
             this.backgroundColor = backgroundColor;
             this.borderColor = borderColor;
         }
@@ -29,10 +31,14 @@ namespace DKoFinal
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
-            spriteBatch.DrawRectangle(new Rectangle((int)position.X, (int)position.Y, 200, 50), backgroundColor);
-            spriteBatch.DrawString(font, text, new Vector2(position.X + 10, position.Y + 10), Color.White);
-            spriteBatch.DrawRectangle(new Rectangle((int)position.X, (int)position.Y, 200, 50), borderColor, 2);
 
+            Vector2 textSize = font.MeasureString(text);
+            Vector2 buttonSize = new Vector2(200, 50);
+            Vector2 buttonPosition = position - (buttonSize / 2);
+
+            //spriteBatch.DrawRectangle(new Rectangle((int)buttonPosition.X, (int)buttonPosition.Y, (int)buttonSize.X, (int)buttonSize.Y), borderColor, 2);
+            //spriteBatch.DrawRectangle(new Rectangle((int)buttonPosition.X, (int)buttonPosition.Y, (int)buttonSize.X, (int)buttonSize.Y), backgroundColor);
+            spriteBatch.DrawString(font, text, buttonPosition + (buttonSize / 2) - (textSize / 2), textColor);
             spriteBatch.End();
         }
     }
