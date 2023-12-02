@@ -47,7 +47,7 @@ namespace DKoFinal
             gameScenes = new List<GameScene>();
 
             Texture2D titleImage = this.Content.Load<Texture2D>("MainScene/GameTitle");
-            mainScene = new MainScene(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight/3), new Rectangle(0,0, titleImage.Width, titleImage.Height), Color.White, new Vector2(titleImage.Width/2, titleImage.Height/2), 0.0f, 0.3f, SpriteEffects.None, 0.0f);
+            mainScene = new MainScene(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             mainScene.Display();
             this.Components.Add(mainScene);
         }
