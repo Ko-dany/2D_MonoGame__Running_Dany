@@ -46,18 +46,54 @@ namespace DKoFinal
             spriteBatch = new SpriteBatch(GraphicsDevice);
             gameScenes = new List<GameScene>();
 
-            Texture2D titleImage = this.Content.Load<Texture2D>("MainScene/GameTitle");
             mainScene = new MainScene(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
-            mainScene.Display();
             this.Components.Add(mainScene);
+            mainScene.Display();
+
+            helpScene = new HelpScene(this);
+            this.Components.Add(helpScene);
+            //helpScene.Display();
+
         }
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            KeyboardState ks = Keyboard.GetState();
 
-            // TODO: Add your update logic here
+            if (mainScene.Visible)
+            {
+                if (ks.IsKeyDown(Keys.Enter))
+                {
+                    int selectedScene = mainScene.GetSelectedIndex();
+                    HideAllScenes();
+                    switch (selectedScene)
+                    {
+                        case 1:
+                            helpScene.Display();
+                            break;
+                        case 3:
+                            Exit();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                if (ks.IsKeyDown(Keys.Escape))
+                {
+                    HideAllScenes();
+                    mainScene.Display();
+                }
+            }
+
+            /*
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            {
+                Exit();
+            }
+            */
 
             base.Update(gameTime);
         }

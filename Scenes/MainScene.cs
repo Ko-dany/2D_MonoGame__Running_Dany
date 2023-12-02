@@ -54,5 +54,10 @@ namespace DKoFinal.Scenes
 
             base.Draw(gameTime);
         }
+
+        public int GetSelectedIndex()
+        {
+            return menuSelection.selectedIndex;
+        }
     }
 }
