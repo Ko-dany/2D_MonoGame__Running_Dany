@@ -1,4 +1,5 @@
-﻿using DKoFinal.Scenes;
+﻿using DKoFinal.Renderers;
+using DKoFinal.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -14,6 +15,9 @@ namespace DKoFinal
 
         private MainScene mainScene;
         private HelpScene helpScene;
+        private AboutScene aboutScene;
+        private GameLevel1 level1;
+
         List<GameScene> gameScenes;
 
         public DkoFinal()
@@ -48,18 +52,24 @@ namespace DKoFinal
 
             mainScene = new MainScene(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             this.Components.Add(mainScene);
-            mainScene.Display();
+            //mainScene.Display();
 
             helpScene = new HelpScene(this);
             this.Components.Add(helpScene);
-            //helpScene.Display();
 
+            aboutScene = new AboutScene(this);
+            this.Components.Add(aboutScene);
+
+            level1 = new GameLevel1(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+            this.Components.Add(level1);
+            level1.Display();
         }
 
         protected override void Update(GameTime gameTime)
         {
             KeyboardState ks = Keyboard.GetState();
 
+            /*
             if (mainScene.Visible)
             {
                 if (ks.IsKeyDown(Keys.Enter))
@@ -70,6 +80,9 @@ namespace DKoFinal
                     {
                         case 1:
                             helpScene.Display();
+                            break;
+                        case 2:
+                            aboutScene.Display();
                             break;
                         case 3:
                             Exit();
@@ -87,6 +100,7 @@ namespace DKoFinal
                     mainScene.Display();
                 }
             }
+            */
 
             /*
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))

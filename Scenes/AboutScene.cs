@@ -9,22 +9,26 @@ using System.Threading.Tasks;
 
 namespace DKoFinal.Scenes
 {
-    internal class HelpScene : GameScene
+    internal class AboutScene:GameScene
     {
         SpriteBatch spriteBatch;
-        Texture2D helpImg;
+        SpriteFont spriteFont;
 
-        public HelpScene(Game game) : base(game)
+        Texture2D aboutImage;
+
+        public AboutScene(Game game) : base(game)
         {
             DkoFinal dkoFinal = (DkoFinal)game;
             spriteBatch = dkoFinal.spriteBatch;
-            helpImg = dkoFinal.Content.Load<Texture2D>("HelpScene/help");
+            spriteFont = dkoFinal.Content.Load<SpriteFont>("Fonts/regular");
+
+            aboutImage = dkoFinal.Content.Load<Texture2D>("HelpScene/help");
         }
 
         public override void Draw(GameTime gameTime)
         {
             spriteBatch.Begin();
-            spriteBatch.Draw(helpImg, Vector2.Zero, Color.White);
+            spriteBatch.DrawString(spriteFont, "Developer: Dahyun Ko", new Vector2(300,300), Color.AliceBlue);
             spriteBatch.End();
 
             base.Draw(gameTime);

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DKoFinal.Scenes
+namespace DKoFinal.Renderers
 {
     internal class GameScene : DrawableGameComponent
     {
@@ -19,14 +19,14 @@ namespace DKoFinal.Scenes
 
         public virtual void Hide()
         {
-            this.Visible = false;
-            this.Enabled = false;
+            Visible = false;
+            Enabled = false;
         }
 
         public virtual void Display()
         {
-            this.Visible = true;
-            this.Enabled = true;
+            Visible = true;
+            Enabled = true;
         }
 
         public override void Draw(GameTime gameTime)
