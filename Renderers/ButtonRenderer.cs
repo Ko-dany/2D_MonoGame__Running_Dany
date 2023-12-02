@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DKoFinal
+namespace DKoFinal.Renderers
 {
     internal class ButtonRenderer
     {
@@ -34,11 +34,11 @@ namespace DKoFinal
 
             Vector2 textSize = font.MeasureString(text);
             Vector2 buttonSize = new Vector2(200, 50);
-            Vector2 buttonPosition = position - (buttonSize / 2);
+            Vector2 buttonPosition = position - buttonSize / 2;
 
             //spriteBatch.DrawRectangle(new Rectangle((int)buttonPosition.X, (int)buttonPosition.Y, (int)buttonSize.X, (int)buttonSize.Y), borderColor, 2);
             //spriteBatch.DrawRectangle(new Rectangle((int)buttonPosition.X, (int)buttonPosition.Y, (int)buttonSize.X, (int)buttonSize.Y), backgroundColor);
-            spriteBatch.DrawString(font, text, buttonPosition + (buttonSize / 2) - (textSize / 2), textColor);
+            spriteBatch.DrawString(font, text, buttonPosition + buttonSize / 2 - textSize / 2, textColor);
             spriteBatch.End();
         }
     }

@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Taskbar;
 
-namespace DKoFinal
+namespace DKoFinal.Renderers
 {
     internal class BackgroundRenderer
     {

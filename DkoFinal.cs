@@ -2,25 +2,36 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Taskbar;
 
 namespace DKoFinal
 {
     public class DkoFinal : Game
     {
-        public GraphicsDeviceManager _graphics;
-        public SpriteBatch _spriteBatch;
+        public GraphicsDeviceManager graphics;
+        public SpriteBatch spriteBatch;
 
         private MainScene mainScene;
+        private HelpScene helpScene;
+        List<GameScene> gameScenes;
 
         public DkoFinal()
         {
-            _graphics = new GraphicsDeviceManager(this);
+            graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
-            _graphics.PreferredBackBufferWidth = 64 * 14;
-            _graphics.PreferredBackBufferHeight = 64 * 8;
+            graphics.PreferredBackBufferWidth = 64 * 14;
+            graphics.PreferredBackBufferHeight = 64 * 8;
+        }
+
+        public void HideAllScenes()
+        {
+            foreach (GameScene scene in this.Components)
+            {
+                scene.Hide();
+            }
         }
 
         protected override void Initialize()
@@ -32,10 +43,11 @@ namespace DKoFinal
 
         protected override void LoadContent()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+            gameScenes = new List<GameScene>();
 
             Texture2D titleImage = this.Content.Load<Texture2D>("MainScene/GameTitle");
-            mainScene = new MainScene(this, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight, new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight/3), new Rectangle(0,0, titleImage.Width, titleImage.Height), Color.White, new Vector2(titleImage.Width/2, titleImage.Height/2), 0.0f, 0.3f, SpriteEffects.None, 0.0f);
+            mainScene = new MainScene(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight/3), new Rectangle(0,0, titleImage.Width, titleImage.Height), Color.White, new Vector2(titleImage.Width/2, titleImage.Height/2), 0.0f, 0.3f, SpriteEffects.None, 0.0f);
             mainScene.Display();
             this.Components.Add(mainScene);
         }

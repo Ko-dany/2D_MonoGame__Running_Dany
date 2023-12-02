@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using DKoFinal.Renderers;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -33,13 +34,13 @@ namespace DKoFinal.Scenes
         Vector2 titleOrigin, float rotation,float scale, SpriteEffects spriteEffect, float layerDepth) : base(game)
         {
             DkoFinal dkoFinal = (DkoFinal)game;
-            spriteBatch = dkoFinal._spriteBatch;
+            spriteBatch = dkoFinal.spriteBatch;
 
             mainBackgroundImg = dkoFinal.Content.Load<Texture2D>("MainScene/Blue");
             mainTitle = dkoFinal.Content.Load<Texture2D>("MainScene/GameTitle");
 
-            regular = dkoFinal.Content.Load<SpriteFont>("Fonts/classic");
-            selected = dkoFinal.Content.Load<SpriteFont>("Fonts/classic");
+            regular = dkoFinal.Content.Load<SpriteFont>("Fonts/regular");
+            selected = dkoFinal.Content.Load<SpriteFont>("Fonts/selected");
 
 
             mainBackground = new BackgroundRenderer(spriteBatch, mainBackgroundImg, backgroundWidth, backgroundHeight);
@@ -53,7 +54,7 @@ namespace DKoFinal.Scenes
             this.spriteEffect = spriteEffect;
             this.layerDepth = layerDepth;
 
-            menuSelection = new MenuRenderer(dkoFinal, spriteBatch, regular, selected, new Vector2(100, 100), Color.White, Color.Black, new string[] { "START", "HELP", "OPTIONS", "EXIT" });
+            menuSelection = new MenuRenderer(dkoFinal, spriteBatch, regular, selected, new Vector2(backgroundWidth/2, backgroundHeight/5*3), Color.White, Color.Black, new string[] { "START", "HELP", "OPTIONS", "EXIT" });
             this.Components.Add(menuSelection);
         }
         public override void Draw(GameTime gameTime)
