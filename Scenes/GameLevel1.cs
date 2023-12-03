@@ -14,9 +14,9 @@ namespace DKoFinal.Scenes
     {
         SpriteBatch spriteBatch;
         Texture2D mainBackgroundImg;
-        Texture2D playerImage;
 
         BackgroundRenderer mainBackground;
+        GroundRenderer groundRenderer;
         PlayerCharacter player;
 
         public GameLevel1(Game game, int backgroundWidth, int backgroundHeight) : base(game)
@@ -26,8 +26,10 @@ namespace DKoFinal.Scenes
             mainBackgroundImg = dkoFinal.Content.Load<Texture2D>("Level1/Yellow");
             mainBackground = new BackgroundRenderer(spriteBatch, mainBackgroundImg, backgroundWidth, backgroundHeight);
 
-            player = new PlayerCharacter(dkoFinal, spriteBatch, new Vector2(10, backgroundHeight/5*4));
+            groundRenderer = new GroundRenderer(dkoFinal, spriteBatch, backgroundHeight);
+            this.Components.Add(groundRenderer);
 
+            player = new PlayerCharacter(dkoFinal, spriteBatch, backgroundHeight);
             this.Components.Add(player);
         }
 

@@ -37,20 +37,21 @@ namespace DKoFinal.Renderers
 
         bool isRunning = false;
 
-        public PlayerCharacter(Game game, SpriteBatch spriteBatch, Vector2 position):base(game)
+        public PlayerCharacter(Game game, SpriteBatch spriteBatch, int backgroundHeight) :base(game)
         {
             DkoFinal dkoFinal = (DkoFinal)game;
-
-            this.spriteBatch = spriteBatch;
-            this.position = position;
-
             playerIdle = dkoFinal.Content.Load<Texture2D>("Level1/Idle");
             playerRun = dkoFinal.Content.Load<Texture2D>("Level1/Run");
+
+            Texture2D groundTexture = dkoFinal.Content.Load<Texture2D>("Level1/Ground");
+
+            this.spriteBatch = spriteBatch;
+            position = new Vector2(10, backgroundHeight - (groundTexture.Height*3.0f));
 
             color = Color.White;
             rotation = 0.0f;
             origin = new Vector2(0, playerIdle.Height);
-            scale = 1.5f;
+            scale = 2f;
             spriteEffects = SpriteEffects.None;
             layerDepth = 0.0f;
 

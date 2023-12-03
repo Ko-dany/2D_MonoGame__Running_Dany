@@ -39,6 +39,18 @@
 /processorParam:TextureFormat=Color
 /build:HelpScene/help.png
 
+#begin Level1/ground.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Level1/ground.png;Level1/Ground.png
+
 #begin Level1/Idle (32x32).png
 /importer:TextureImporter
 /processor:TextureProcessor
