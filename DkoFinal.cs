@@ -16,7 +16,7 @@ namespace DKoFinal
         private MainScene mainScene;
         private HelpScene helpScene;
         private AboutScene aboutScene;
-        private GameLevel1 level1;
+        private GameLevel1 gameLevel1;
 
         List<GameScene> gameScenes;
 
@@ -60,16 +60,15 @@ namespace DKoFinal
             aboutScene = new AboutScene(this);
             this.Components.Add(aboutScene);
 
-            level1 = new GameLevel1(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
-            this.Components.Add(level1);
-            level1.Display();
+            gameLevel1 = new GameLevel1(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+            this.Components.Add(gameLevel1);
+            gameLevel1.Display();
         }
 
         protected override void Update(GameTime gameTime)
         {
             KeyboardState ks = Keyboard.GetState();
 
-            /*
             if (mainScene.Visible)
             {
                 if (ks.IsKeyDown(Keys.Enter))
@@ -78,6 +77,9 @@ namespace DKoFinal
                     HideAllScenes();
                     switch (selectedScene)
                     {
+                        case 0:
+                            gameLevel1.Display();
+                            break;
                         case 1:
                             helpScene.Display();
                             break;
@@ -100,7 +102,6 @@ namespace DKoFinal
                     mainScene.Display();
                 }
             }
-            */
 
             /*
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))

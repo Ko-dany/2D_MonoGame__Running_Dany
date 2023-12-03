@@ -26,8 +26,7 @@ namespace DKoFinal.Scenes
             mainBackgroundImg = dkoFinal.Content.Load<Texture2D>("Level1/Yellow");
             mainBackground = new BackgroundRenderer(spriteBatch, mainBackgroundImg, backgroundWidth, backgroundHeight);
 
-            playerImage = dkoFinal.Content.Load<Texture2D>("Level1/Idle");
-            player = new PlayerCharacter(dkoFinal, spriteBatch, playerImage, new Vector2(backgroundWidth / 2, backgroundHeight / 2), Color.White);
+            player = new PlayerCharacter(dkoFinal, spriteBatch, new Vector2(10, backgroundHeight/5*4));
 
             this.Components.Add(player);
         }
