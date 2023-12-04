@@ -39,6 +39,18 @@
 /processorParam:TextureFormat=Color
 /build:HelpScene/help.png
 
+#begin Level1/Fall (32x32).png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Level1/Fall (32x32).png;Level1/Fall.png
+
 #begin Level1/ground.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -49,7 +61,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Level1/ground.png;Level1/Ground.png
+/build:Level1/ground.png
 
 #begin Level1/Idle (32x32).png
 /importer:TextureImporter
@@ -61,7 +73,19 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Level1/Idle (32x32).png;Level1/Idle.png
+/build:Level1/Idle (32x32).png
+
+#begin Level1/Jump (32x32).png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Level1/Jump (32x32).png;Level1/Jump.png
 
 #begin Level1/Run (32x32).png
 /importer:TextureImporter
@@ -73,7 +97,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Level1/Run (32x32).png;Level1/Run.png
+/build:Level1/Run (32x32).png
 
 #begin Level1/Yellow.png
 /importer:TextureImporter
