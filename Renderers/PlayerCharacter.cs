@@ -36,14 +36,13 @@ namespace DKoFinal.Renderers
         float jumpForce = 10.0f;
         float gravity = .5f;
 
-        float velocityY;
+        float velocityY = 0f;
         float groundY;
 
         int currentImage = 0;
         int delay = 20;
         float counter = 0;
 
-        bool isRunning = false;
         bool isJumping = false;
         bool isGrounded = true;
 
@@ -58,16 +57,15 @@ namespace DKoFinal.Renderers
             Texture2D groundTexture = dkoFinal.Content.Load<Texture2D>("Level1/Ground");
 
             this.spriteBatch = spriteBatch;
-            position = new Vector2(10, backgroundHeight - (groundTexture.Height*3.0f));
+            position = new Vector2(30, backgroundHeight - (groundTexture.Height*3.0f));
 
             color = Color.White;
             rotation = 0.0f;
             origin = new Vector2(0, playerIdle.Height);
-            scale = 2f;
+            scale = 3f;
             spriteEffects = SpriteEffects.None;
             layerDepth = 0.0f;
 
-            velocityY = position.Y;
             groundY = position.Y;
 
             idleRectangles = new List<Rectangle>();
@@ -92,39 +90,27 @@ namespace DKoFinal.Renderers
         public override void Update(GameTime gameTime)
         {
             KeyboardState ks = Keyboard.GetState();
-            if (ks.IsKeyDown(Keys.Left))
-            {
-                position.X -= speed;
-            }
-            if (ks.IsKeyDown(Keys.Right))
-            {
-                position.X += speed;
-            }
+
             if (ks.IsKeyDown(Keys.Space) && isGrounded)
             {
                 velocityY = -jumpForce;
+                isJumping = true;
                 isGrounded = false;
             }
 
             velocityY += gravity;
             position.Y += velocityY;
 
-            if(position.Y >= groundY)
+            if (velocityY > 0)
+            {
+                isJumping = false;
+            }
+
+            if (position.Y >= groundY)
             {
                 position.Y = groundY;
                 velocityY = position.Y;
                 isGrounded = true;
-            }
-
-            if (ks.IsKeyDown(Keys.Left) || ks.IsKeyDown(Keys.Right))
-            {
-                isRunning = true;
-            }
-            else if(ks.IsKeyUp(Keys.Left) || ks.IsKeyUp(Keys.Right))
-            {
-                isRunning = false;
-                counter = 0;
-                currentImage = 0;
             }
 
             counter += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -132,11 +118,7 @@ namespace DKoFinal.Renderers
             {
                 counter = 0;
                 currentImage += 1;
-                if (isRunning && currentImage == idleRectangles.Count)
-                {
-                    currentImage = 0;
-                }
-                else if (!isRunning && currentImage == runRectangles.Count)
+                if (currentImage == runRectangles.Count)
                 {
                     currentImage = 0;
                 }
@@ -151,20 +133,21 @@ namespace DKoFinal.Renderers
 
             spriteBatch.Begin();
 
-            if (isRunning)
+            if (isGrounded)
             {
                 spriteBatch.Draw(playerRun, position, runRectangles[currentImage], color, rotation, origin, scale, spriteEffects, layerDepth);
             }
             else
             {
-                spriteBatch.Draw(playerIdle, position, idleRectangles[currentImage], color, rotation, origin, scale, spriteEffects, layerDepth);
+                if (isJumping)
+                {
+                    spriteBatch.Draw(playerJump, position, jumpRectangle, color, rotation, origin, scale, spriteEffects, layerDepth);
+                }
+                else
+                {
+                    spriteBatch.Draw(playerFall, position, jumpRectangle, color, rotation, origin, scale, spriteEffects, layerDepth);
+                }
             }
-
-            if (isJumping)
-            {
-                spriteBatch.Draw(playerJump, position, jumpRectangle, color, rotation, origin, scale, spriteEffects, layerDepth);
-            }
-
 
             spriteBatch.End();
             base.Draw(gameTime);
