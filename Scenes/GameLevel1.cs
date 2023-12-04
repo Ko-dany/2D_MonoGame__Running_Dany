@@ -26,10 +26,10 @@ namespace DKoFinal.Scenes
             mainBackgroundImg = dkoFinal.Content.Load<Texture2D>("Level1/Yellow");
             mainBackground = new BackgroundRenderer(spriteBatch, mainBackgroundImg, backgroundWidth, backgroundHeight);
 
-            groundRenderer = new GroundRenderer(dkoFinal, spriteBatch, backgroundHeight);
-            this.Components.Add(groundRenderer);
+            //groundRenderer = new GroundRenderer(dkoFinal, spriteBatch, backgroundHeight);
+            //this.Components.Add(groundRenderer);
 
-            player = new PlayerCharacter(dkoFinal, spriteBatch, backgroundHeight);
+            player = new PlayerCharacter(dkoFinal, spriteBatch, backgroundWidth, backgroundHeight);
             this.Components.Add(player);
         }
 

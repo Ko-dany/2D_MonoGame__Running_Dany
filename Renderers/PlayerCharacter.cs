@@ -16,9 +16,6 @@ namespace DKoFinal.Renderers
         const int doubleJump_COL = 6;
 
         SpriteBatch spriteBatch;
-        Texture2D playerIdle;
-        Texture2D playerRun;
-        Texture2D playerJump;
         Texture2D playerFall;
         Texture2D playerDoubleJump;
 
@@ -30,67 +27,41 @@ namespace DKoFinal.Renderers
         SpriteEffects spriteEffects;
         float layerDepth;
 
-        List<Rectangle> idleRectangles;
-        List<Rectangle> runRectangles;
-        Rectangle jumpRectangle;
         List<Rectangle> doubleJumpRectangles;
 
-        float jumpForce = 10.0f;
-        float gravity = .5f;
+        const float speed = 5.0f;
+        const float jumpForce = 5.0f;
+        const float gravity = 0.25f;
         float velocityY = 0f;
-        float groundY;
 
-        int currentRun = 0;
         int currentDoubleJump = 0;
 
-        int delay = 20;
+        int delay = 30;
         float counter = 0;
 
         bool isJumping = false;
-        bool isGrounded = true;
-        int jumps = 0;
-        bool isDoubleJumping = false;
 
-        public PlayerCharacter(Game game, SpriteBatch spriteBatch, int backgroundHeight) :base(game)
+        public PlayerCharacter(Game game, SpriteBatch spriteBatch, int backgroundWidth, int backgroundHeight) :base(game)
         {
             DkoFinal dkoFinal = (DkoFinal)game;
-            playerIdle = dkoFinal.Content.Load<Texture2D>("Level1/Idle");
-            playerRun = dkoFinal.Content.Load<Texture2D>("Level1/Run");
-            playerJump = dkoFinal.Content.Load<Texture2D>("Level1/Jump");
             playerFall = dkoFinal.Content.Load<Texture2D>("Level1/Fall");
             playerDoubleJump = dkoFinal.Content.Load<Texture2D>("Level1/DoubleJump");
 
             Texture2D groundTexture = dkoFinal.Content.Load<Texture2D>("Level1/Ground");
 
             this.spriteBatch = spriteBatch;
-            position = new Vector2(30, backgroundHeight - (groundTexture.Height*3.0f));
+            position = new Vector2(backgroundWidth/2, backgroundHeight/2);
 
             color = Color.White;
             rotation = 0.0f;
-            origin = new Vector2(0, playerIdle.Height);
-            scale = 3f;
+            origin = new Vector2(playerFall.Width/2, playerFall.Height/2);
+            scale = 2f;
             spriteEffects = SpriteEffects.None;
             layerDepth = 0.0f;
 
-            groundY = position.Y;
+            isJumping = false;
 
-            idleRectangles = new List<Rectangle>();
-            runRectangles = new List<Rectangle>();
-            jumpRectangle = new Rectangle(0, 0, playerJump.Width, playerJump.Height);
             doubleJumpRectangles = new List<Rectangle>();
-
-            for (int i=0; i< idle_COL; i++)
-            {
-                Rectangle rectangle = new Rectangle(i * playerIdle.Width / idle_COL, 0, playerIdle.Width / idle_COL, playerIdle.Height);
-                idleRectangles.Add(rectangle);
-            }
-
-            for (int i = 0; i < run_COL; i++)
-            {
-                Rectangle rectangle = new Rectangle(i * playerRun.Width / run_COL, 0, playerRun.Width / run_COL, playerRun.Height);
-                runRectangles.Add(rectangle);
-            }
-
             for (int i = 0; i < doubleJump_COL; i++)
             {
                 Rectangle rectangle = new Rectangle(i * playerDoubleJump.Width / doubleJump_COL, 0, playerDoubleJump.Width / doubleJump_COL, playerDoubleJump.Height);
@@ -102,21 +73,21 @@ namespace DKoFinal.Renderers
         {
             KeyboardState ks = Keyboard.GetState();
 
-            if (ks.IsKeyDown(Keys.Space) && (isGrounded || jumps < 2))
+            if (ks.IsKeyDown(Keys.Space) && !isJumping)
             {
-                if (jumps == 0)
-                {
-                    velocityY = -jumpForce;
-                }
-                else
-                {
-                    velocityY = -(jumpForce * 2f);
-                    isDoubleJumping = true;
-                }
-                
-                jumps++;
+                velocityY = -jumpForce;
                 isJumping = true;
-                isGrounded = false;
+            }
+
+            if (ks.IsKeyDown(Keys.Left))
+            {
+                position.X -= speed;
+                spriteEffects = SpriteEffects.FlipHorizontally;
+            }
+            if (ks.IsKeyDown(Keys.Right))
+            {
+                position.X += speed;
+                spriteEffects = SpriteEffects.None;
             }
 
             velocityY += gravity;
@@ -127,35 +98,19 @@ namespace DKoFinal.Renderers
                 isJumping = false;
             }
 
-            if (position.Y >= groundY)
+            if (position.Y < 0)
             {
                 velocityY = 0;
-                position.Y = groundY;
-                isGrounded = true;
-                isDoubleJumping = false;
-                jumps = 0;
+                position.Y = 0;
             }
 
+            counter += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (counter > delay)
+            {
+                counter = 0;
 
-            if (isGrounded)
-            {
-                counter += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-                if (counter > delay)
+                if (isJumping)
                 {
-                    counter = 0;
-                    currentRun += 1;
-                    if (currentRun == runRectangles.Count)
-                    {
-                        currentRun = 0;
-                    }
-                }
-            }
-            else
-            {
-                counter += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-                if (counter > delay)
-                {
-                    counter = 0;
                     currentDoubleJump += 1;
                     if (currentDoubleJump == doubleJumpRectangles.Count)
                     {
@@ -164,34 +119,20 @@ namespace DKoFinal.Renderers
                 }
             }
 
-
             base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
         {
-            KeyboardState ks = Keyboard.GetState();
-
             spriteBatch.Begin();
 
-            if (isGrounded)
+            if (!isJumping)
             {
-                spriteBatch.Draw(playerRun, position, runRectangles[currentRun], color, rotation, origin, scale, spriteEffects, layerDepth);
+                spriteBatch.Draw(playerFall, position, new Rectangle(0,0, playerFall.Width, playerFall.Height), color, rotation, origin, scale, spriteEffects, layerDepth);
             }
             else
             {
-                if (isDoubleJumping)
-                {
-                    spriteBatch.Draw(playerDoubleJump, position, doubleJumpRectangles[currentDoubleJump], color, rotation, origin, scale, spriteEffects, layerDepth);
-                }
-                else if (isJumping)
-                {
-                    spriteBatch.Draw(playerJump, position, jumpRectangle, color, rotation, origin, scale, spriteEffects, layerDepth);
-                }
-                else
-                {
-                    spriteBatch.Draw(playerFall, position, jumpRectangle, color, rotation, origin, scale, spriteEffects, layerDepth);
-                }
+                spriteBatch.Draw(playerDoubleJump, position, doubleJumpRectangles[currentDoubleJump], color, rotation, origin, scale, spriteEffects, layerDepth);
             }
 
             spriteBatch.End();
