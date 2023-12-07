@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,19 +40,21 @@ namespace DKoFinal.Scenes
             this.Components.Add(player);
 
             Random random = new Random();
-            int obstacleCount = 10;
+            int obstacleCount = 15;
 
-            //List<ObstacleAnimation> obstacles = new List<ObstacleAnimation>();
+            List<ObstacleAnimation> obstacles = new List<ObstacleAnimation>();
             for(int i=0; i< obstacleCount; i++)
             {
                 Vector2 randomPosition = new Vector2(random.Next(backgroundWidth, backgroundWidth * 3), random.Next(0, backgroundHeight));
+                Vector2 randomSpeed = new Vector2(random.Next(3,5), random.Next(0,1));
 
-                obstacle = new ObstacleAnimation(dkoFinal, spriteBatch, obstacleImage, randomPosition, new Vector2(1, 0), 4);
+                obstacle = new ObstacleAnimation(dkoFinal, spriteBatch, obstacleImage, randomPosition, randomSpeed, 4);
+                obstacles.Add(obstacle);
                 this.Components.Add(obstacle);
-
-                obstacleCollision = new ObstacleAnimationCollision(dkoFinal, player, obstacle);
-                this.Components.Add(obstacleCollision);
             }
+
+            obstacleCollision = new ObstacleAnimationCollision(dkoFinal, player, obstacles);
+            this.Components.Add(obstacleCollision);
 
             // ===== Level 2 를 위한 지형
             //ground = new GroundRenderer(dkoFinal, spriteBatch, backgroundHeight);
@@ -65,12 +68,8 @@ namespace DKoFinal.Scenes
 
         public override void Update(GameTime gameTime)
         {
-
-            if (obstacleCollision.DetectCollision())
-            {
-                gameOver = true;
-            }
-
+            gameOver = obstacleCollision.DetectCollision();
+            Debug.WriteLine("Game Over!! =======================");
             base.Update(gameTime);
         }
 

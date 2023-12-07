@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using SharpDX.WIC;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace DKoFinal
 {
@@ -138,9 +139,9 @@ namespace DKoFinal
             if (gameStarted && !gamePaused && !gameEnded)
             { 
                 gamePlayedTime += gameTime.ElapsedGameTime;
+                gameScore = Math.Round(gamePlayedTime.TotalSeconds, 2);
 
                 /* ==== 게임 시간 스코어 테스트
-                gameScore = Math.Round(gamePlayedTime.TotalSeconds, 2);
                 scoreText = new Text(this, gameScore.ToString(), spriteBatch, scoreFont, new Vector2(20, 20));
                 this.Components.Add(scoreText);
                 */
@@ -150,6 +151,10 @@ namespace DKoFinal
             {
                 if (gameLevel1.CheckGameOver())
                 {
+
+                    Debug.WriteLine("Game Over Scene must be shown =======================");
+                    // 특정 오브젝트에 충돌했을 때만 여기까지 닿는다. 왜지?
+
                     HideAllScenes();
 
                     gameEnded = true;

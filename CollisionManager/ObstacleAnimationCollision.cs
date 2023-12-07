@@ -12,29 +12,33 @@ namespace DKoFinal.GameManager
     public class ObstacleAnimationCollision : GameComponent
     {
         PlayerCharacter player;
-        ObstacleAnimation obstacleAnim;
+        List<ObstacleAnimation> obstacleAnims;
 
         bool collided = false;
 
-        public ObstacleAnimationCollision(Game game, PlayerCharacter player, ObstacleAnimation obstacleAnim) : base(game)
+        public ObstacleAnimationCollision(Game game, PlayerCharacter player, List<ObstacleAnimation> obstacleAnims) : base(game)
         {
             this.player = player;
-            this.obstacleAnim = obstacleAnim;
+            this.obstacleAnims = obstacleAnims;
         }
 
         public override void Update(GameTime gameTime)
         {
             Rectangle playerRect = player.GetBounds();
-            Rectangle obstacleAnimRect = obstacleAnim.GetBounds();
 
-            if (playerRect.Intersects(obstacleAnimRect))
+            foreach (ObstacleAnimation obstacle in obstacleAnims)
             {
-                collided = true;
-                Debug.WriteLine("Obstacle just Hit==============================================");
-            }
-            else
-            {
-                collided = false;
+                Rectangle obstacleAnimRect = obstacle.GetBounds();
+                if (playerRect.Intersects(obstacleAnimRect))
+                {
+                    collided = true;
+                    Debug.WriteLine("Obstacle just Hit==============================================");
+                    break;
+                }
+                else
+                {
+                    collided = false;
+                }
             }
 
             base.Update(gameTime);
