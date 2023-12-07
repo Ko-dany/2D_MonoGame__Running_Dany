@@ -24,16 +24,17 @@ namespace DKoFinal
 
         List<GameScene> gameScenes;
 
-        bool gameStarted = false;
+        bool gameStarted;
+        bool gamePaused;
+        bool gameEnded;
+        TimeSpan gamePlayedTime;
+        double gameTimeResult;
 
         public DkoFinal()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-
-            IsFixedTimeStep = true;
-            TargetElapsedTime = TimeSpan.FromMilliseconds(16.666);
 
             graphics.PreferredBackBufferWidth = 64 * 14;
             graphics.PreferredBackBufferHeight = 64 * 8;
@@ -49,6 +50,11 @@ namespace DKoFinal
 
         protected override void Initialize()
         {
+            gameStarted = false;
+            gamePaused = false;
+            gameEnded = false;
+            gamePlayedTime = TimeSpan.Zero;
+
             base.Initialize();
         }
 
@@ -73,10 +79,6 @@ namespace DKoFinal
 
             menuDuringGame = new MenuDuringGameScene(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             this.Components.Add(menuDuringGame);
-
-            gameResult = new GameResultScene(this, "GAME OVER!", graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
-            this.Components.Add(gameResult);
-
         }
 
         protected override void Update(GameTime gameTime)
@@ -94,6 +96,7 @@ namespace DKoFinal
                         case 0:
                             gameLevel1.Display();
                             gameStarted = true;
+                            gamePaused = false;
                             break;
                         case 1:
                             helpScene.Display();
@@ -117,6 +120,7 @@ namespace DKoFinal
                     if (gameStarted)
                     {
                         menuDuringGame.Display();
+                        gamePaused = true;
                     }
                     else
                     {
@@ -125,11 +129,22 @@ namespace DKoFinal
                 }
             }
 
+            if (gameStarted && !gamePaused && !gameEnded)
+            { 
+                gamePlayedTime += gameTime.ElapsedGameTime;
+            }
+
             if (gameLevel1.Visible)
             {
                 if (gameLevel1.CheckGameOver())
                 {
                     HideAllScenes();
+
+                    gameEnded = true;
+                    gameTimeResult = Math.Round(gamePlayedTime.TotalSeconds, 2);
+
+                    gameResult = new GameResultScene(this, $"GAME OVER! You took {gameTimeResult} seconds to finish the game.", graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+                    this.Components.Add(gameResult);
                     gameResult.Display();
                 }
             }

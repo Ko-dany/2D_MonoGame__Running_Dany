@@ -51,8 +51,6 @@ namespace DKoFinal.Scenes
             //GroundCollisionManager groundCollision = new GroundCollisionManager(dkoFinal, player, ground);
             //this.Components.Add(groundCollision); 
 
-            gameResultScene = new GameResultScene(game, "Game Over!", backgroundWidth, backgroundHeight);
-
             gameOver = false;
         }
 
