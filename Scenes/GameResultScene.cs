@@ -41,9 +41,8 @@ namespace DKoFinal.Scenes
             menuSelection = new MenuSelection(dkoFinal, spriteBatch, regular, selected, new Vector2(backgroundWidth / 2, backgroundHeight / 5 * 3), Color.White, Color.Black, new string[] { "BACK TO MAIN", "ABOUT", "EXIT" });
             this.Components.Add(menuSelection);
 
-            resultText = new Text(dkoFinal, gameResult, spriteBatch, regular, new Vector2(backgroundWidth / 2, backgroundHeight / 2));
+            resultText = new Text(dkoFinal, gameResult, spriteBatch, regular, new Vector2(backgroundWidth/2, backgroundHeight / 3));
             this.Components.Add(resultText);
-
         }
         public override void Draw(GameTime gameTime)
         {

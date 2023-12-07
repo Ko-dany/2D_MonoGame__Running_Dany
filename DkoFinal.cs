@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework.Input;
 using SharpDX.WIC;
 using System;
 using System.Collections.Generic;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Taskbar;
 
 namespace DKoFinal
 {
@@ -15,12 +14,16 @@ namespace DKoFinal
         public GraphicsDeviceManager graphics;
         public SpriteBatch spriteBatch;
 
+        SpriteFont scoreFont;
+
         MainScene mainScene;
         HelpScene helpScene;
         AboutScene aboutScene;
         GameLevel1 gameLevel1;
         MenuDuringGameScene menuDuringGame;
-        GameResultScene gameResult; 
+        GameResultScene gameResult;
+
+        Text scoreText;
 
         List<GameScene> gameScenes;
 
@@ -28,7 +31,8 @@ namespace DKoFinal
         bool gamePaused;
         bool gameEnded;
         TimeSpan gamePlayedTime;
-        double gameTimeResult;
+        double gameScore;
+        string gameTimeResult;
 
         public DkoFinal()
         {
@@ -53,6 +57,7 @@ namespace DKoFinal
             gameStarted = false;
             gamePaused = false;
             gameEnded = false;
+            gameScore = 0.00;
             gamePlayedTime = TimeSpan.Zero;
 
             base.Initialize();
@@ -62,6 +67,7 @@ namespace DKoFinal
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             gameScenes = new List<GameScene>();
+            scoreFont = Content.Load<SpriteFont>("Fonts/regular");
 
             mainScene = new MainScene(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             this.Components.Add(mainScene);
@@ -132,6 +138,12 @@ namespace DKoFinal
             if (gameStarted && !gamePaused && !gameEnded)
             { 
                 gamePlayedTime += gameTime.ElapsedGameTime;
+
+                /* ==== 게임 시간 스코어 테스트
+                gameScore = Math.Round(gamePlayedTime.TotalSeconds, 2);
+                scoreText = new Text(this, gameScore.ToString(), spriteBatch, scoreFont, new Vector2(20, 20));
+                this.Components.Add(scoreText);
+                */
             }
 
             if (gameLevel1.Visible)
@@ -141,9 +153,36 @@ namespace DKoFinal
                     HideAllScenes();
 
                     gameEnded = true;
-                    gameTimeResult = Math.Round(gamePlayedTime.TotalSeconds, 2);
 
-                    gameResult = new GameResultScene(this, $"GAME OVER! You took {gameTimeResult} seconds to finish the game.", graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+                    /* ==== 게임 시간 표기 테스트 (시간/분/초)
+                    double totalSeconds = gamePlayedTime.TotalSeconds;
+                    if (totalSeconds > 3600)
+                    {
+                        int hours = (int)(totalSeconds / 3600);
+                        int minutes = (int)((totalSeconds % 3600) / 60);
+                        int seconds = (int)(totalSeconds % 60);
+
+                        gameTimeResult = $"GAME OVER!\n" +
+                            $"You took <{hours} hours, {minutes} minutes, {seconds} seconds> to finish the game.";
+                    }
+                    else if(totalSeconds > 60)
+                    {
+                        int minutes = (int)((totalSeconds % 3600) / 60);
+                        int seconds = (int)(totalSeconds % 60);
+
+                        gameTimeResult = $"GAME OVER!\n" +
+                            $"You took <{minutes} minutes, {seconds} seconds> to finish the game.";
+                    }
+                    else
+                    {
+                        gameTimeResult = $"GAME OVER! You took <{totalSeconds} seconds> to finish the game.";
+                    }
+                    */
+
+                    gameTimeResult = $"GAME OVER\n" +
+                        $"Your score: {gameScore}";
+
+                    gameResult = new GameResultScene(this, gameTimeResult, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
                     this.Components.Add(gameResult);
                     gameResult.Display();
                 }

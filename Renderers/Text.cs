@@ -14,7 +14,6 @@ namespace DKoFinal.Renderers
         SpriteBatch spriteBatch;
         SpriteFont spriteFont;
         Vector2 position;
-        Rectangle srcRectangle;
         Color color;
         Vector2 origin;
         float rotation;

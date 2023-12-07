@@ -21,7 +21,6 @@ namespace DKoFinal.Scenes
 
         ObstacleAnimation obstacle;
         ObstacleAnimationCollision obstacleCollision;
-        GameResultScene gameResultScene;
 
         bool gameOver;
 
@@ -39,12 +38,22 @@ namespace DKoFinal.Scenes
             player = new PlayerCharacter(dkoFinal, spriteBatch, backgroundWidth, backgroundHeight);
             this.Components.Add(player);
 
-            obstacle = new ObstacleAnimation(dkoFinal, spriteBatch, obstacleImage, new Vector2(700, 300), new Vector2(1,0), 4);
-            this.Components.Add(obstacle);
+            Random random = new Random();
+            int obstacleCount = 10;
 
-            obstacleCollision = new ObstacleAnimationCollision(dkoFinal, player, obstacle);
-            this.Components.Add(obstacleCollision);
+            //List<ObstacleAnimation> obstacles = new List<ObstacleAnimation>();
+            for(int i=0; i< obstacleCount; i++)
+            {
+                Vector2 randomPosition = new Vector2(random.Next(backgroundWidth, backgroundWidth * 3), random.Next(0, backgroundHeight));
 
+                obstacle = new ObstacleAnimation(dkoFinal, spriteBatch, obstacleImage, randomPosition, new Vector2(1, 0), 4);
+                this.Components.Add(obstacle);
+
+                obstacleCollision = new ObstacleAnimationCollision(dkoFinal, player, obstacle);
+                this.Components.Add(obstacleCollision);
+            }
+
+            // ===== Level 2 를 위한 지형
             //ground = new GroundRenderer(dkoFinal, spriteBatch, backgroundHeight);
             //this.Components.Add(ground);
 
