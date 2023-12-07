@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DKoFinal.Scenes
 {
-    internal class HelpScene : GameScene
+    public class HelpScene : GameScene
     {
         SpriteBatch spriteBatch;
         Texture2D helpImg;

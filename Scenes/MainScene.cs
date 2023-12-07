@@ -9,7 +9,7 @@ using static System.ComponentModel.Design.ObjectSelectorEditor;
 
 namespace DKoFinal.Scenes
 {
-    internal class MainScene:GameScene
+    public class MainScene:GameScene
     {
         SpriteBatch spriteBatch;
         Texture2D mainBackgroundImg;

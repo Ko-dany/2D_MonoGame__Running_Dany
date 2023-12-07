@@ -14,6 +14,8 @@ namespace DKoFinal.GameManager
         PlayerCharacter player;
         GroundRenderer ground;
 
+        bool collided = false;
+
         public GroundCollisionManager(Game game, PlayerCharacter player, GroundRenderer ground) : base(game)
         {
             this.player = player;
@@ -29,10 +31,16 @@ namespace DKoFinal.GameManager
             {
                 if (playerRectangles.Intersects(groundRec))
                 {
+                    collided = true;
                     Debug.WriteLine("Player should die!!!!!!");
                 }
             }
             base.Update(gameTime);
+        }
+
+        public bool DetectCollision()
+        {
+            return collided;
         }
     }
 }

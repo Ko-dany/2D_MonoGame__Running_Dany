@@ -41,5 +41,6 @@ namespace DKoFinal.Renderers
 
             base.Draw(gameTime);
         }
+
     }
 }

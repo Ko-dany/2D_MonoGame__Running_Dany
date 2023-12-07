@@ -3,6 +3,7 @@ using DKoFinal.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using SharpDX.WIC;
 using System.Collections.Generic;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Taskbar;
 
@@ -13,12 +14,15 @@ namespace DKoFinal
         public GraphicsDeviceManager graphics;
         public SpriteBatch spriteBatch;
 
-        private MainScene mainScene;
-        private HelpScene helpScene;
-        private AboutScene aboutScene;
-        private GameLevel1 gameLevel1;
+        MainScene mainScene;
+        HelpScene helpScene;
+        AboutScene aboutScene;
+        GameLevel1 gameLevel1;
+        GameResultScene gameResult;
 
         List<GameScene> gameScenes;
+
+        bool gameStarted = false;
 
         public DkoFinal()
         {
@@ -40,8 +44,6 @@ namespace DKoFinal
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             base.Initialize();
         }
 
@@ -63,6 +65,9 @@ namespace DKoFinal
             gameLevel1 = new GameLevel1(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             this.Components.Add(gameLevel1);
             gameLevel1.Display();
+
+            gameResult = new GameResultScene(this, "GAME OVER!", graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+            this.Components.Add(gameResult);
         }
 
         protected override void Update(GameTime gameTime)
@@ -79,6 +84,7 @@ namespace DKoFinal
                     {
                         case 0:
                             gameLevel1.Display();
+                            gameStarted = true;
                             break;
                         case 1:
                             helpScene.Display();
@@ -103,12 +109,14 @@ namespace DKoFinal
                 }
             }
 
-            /*
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (gameLevel1.Visible)
             {
-                Exit();
+                if (gameLevel1.CheckGameOver())
+                {
+                    HideAllScenes();
+                    gameResult.Display();
+                }
             }
-            */
 
             base.Update(gameTime);
         }
@@ -116,9 +124,6 @@ namespace DKoFinal
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
-
             base.Draw(gameTime);
         }
     }

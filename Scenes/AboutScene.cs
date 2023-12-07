@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DKoFinal.Scenes
 {
-    internal class AboutScene:GameScene
+    public class AboutScene:GameScene
     {
         SpriteBatch spriteBatch;
         SpriteFont spriteFont;

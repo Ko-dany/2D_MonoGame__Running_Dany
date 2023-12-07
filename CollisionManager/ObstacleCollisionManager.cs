@@ -9,12 +9,13 @@ using System.Threading.Tasks;
 
 namespace DKoFinal.GameManager
 {
-    public class CollisionManager : GameComponent
+    public class ObstacleCollisionManager : GameComponent
     {
         PlayerCharacter player;
         ObstacleRenderer pipe;
 
-        public CollisionManager(Game game, PlayerCharacter player, ObstacleRenderer pipe) : base(game)
+        bool collided = false;
+        public ObstacleCollisionManager(Game game, PlayerCharacter player, ObstacleRenderer pipe) : base(game)
         {
             this.player = player;
             this.pipe = pipe;
@@ -27,10 +28,16 @@ namespace DKoFinal.GameManager
 
             if (playerRect.Intersects(pipeRect))
             {
-                Debug.WriteLine("PipeHit==============================================");
+                collided = true;
+                Debug.WriteLine("Obstacle just Hit==============================================");
             }
 
             base.Update(gameTime);
+        }
+
+        public bool DetectCollision()
+        {
+            return collided;
         }
     }
 }

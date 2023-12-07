@@ -7,10 +7,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace DKoFinal.Scenes
 {
-    internal class GameLevel1 : GameScene
+    public class GameLevel1 : GameScene
     {
         SpriteBatch spriteBatch;
         Texture2D mainBackgroundImg;
@@ -18,9 +19,13 @@ namespace DKoFinal.Scenes
         BackgroundRenderer mainBackground;
         PlayerCharacter player;
 
+        ObstacleCollisionManager obstacleCollision;
+
+        GameResultScene gameResultScene;
+
+        bool gameOver;
+
         //GroundRenderer ground;
-
-
         public GameLevel1(Game game, int backgroundWidth, int backgroundHeight) : base(game)
         {
             DkoFinal dkoFinal = (DkoFinal)game;
@@ -36,7 +41,7 @@ namespace DKoFinal.Scenes
             ObstacleRenderer obstacle = new ObstacleRenderer(dkoFinal, spriteBatch, dkoFinal.Content.Load<Texture2D>("Level1/Pipe"), new Vector2(backgroundWidth + 500, 300), new Vector2(3, 0));
             this.Components.Add(obstacle);
 
-            CollisionManager obstacleCollision = new CollisionManager(dkoFinal, player, obstacle);
+            obstacleCollision = new ObstacleCollisionManager(dkoFinal, player, obstacle);
             this.Components.Add(obstacleCollision);
 
             //ground = new GroundRenderer(dkoFinal, spriteBatch, backgroundHeight);
@@ -44,6 +49,20 @@ namespace DKoFinal.Scenes
 
             //GroundCollisionManager groundCollision = new GroundCollisionManager(dkoFinal, player, ground);
             //this.Components.Add(groundCollision); 
+
+            gameResultScene = new GameResultScene(game, "Game Over!", backgroundWidth, backgroundHeight);
+
+            gameOver = false;
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            if (obstacleCollision.DetectCollision())
+            {
+                gameOver = true;
+            }
+
+            base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
@@ -52,6 +71,11 @@ namespace DKoFinal.Scenes
             spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        public bool CheckGameOver()
+        {
+            return gameOver;
         }
     }
 }

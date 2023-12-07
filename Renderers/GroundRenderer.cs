@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Taskbar;
 
 namespace DKoFinal.Renderers
 {
@@ -22,13 +23,16 @@ namespace DKoFinal.Renderers
         float layerDepth;
 
         float speed;
+        int backgroundHeight;
 
         public GroundRenderer(Game game, SpriteBatch spriteBath,int backgroundHeight):base(game)
         {
             DkoFinal dkoFinal = (DkoFinal)game;
 
             this.spriteBatch = spriteBath;
-            
+            this.backgroundHeight = backgroundHeight;
+
+
             groundTexture = dkoFinal.Content.Load<Texture2D>("Level1/Spikes");
 
             topPosition1 = new Vector2(0, 0);
@@ -92,10 +96,8 @@ namespace DKoFinal.Renderers
         public List<Rectangle> GetBounds()
         {
             List<Rectangle> rectangles = new List<Rectangle>();
-            rectangles.Add(new Rectangle((int)topPosition1.X, (int)topPosition1.Y, groundTexture.Width, groundTexture.Height));
-            rectangles.Add(new Rectangle((int)bottomPosition1.X, (int)bottomPosition1.Y, groundTexture.Width, groundTexture.Height));
-            rectangles.Add(new Rectangle((int)topPosition2.X, (int)topPosition2.Y, groundTexture.Width, groundTexture.Height));
-            rectangles.Add(new Rectangle((int)bottomPosition2.X, (int)bottomPosition2.Y, groundTexture.Width, groundTexture.Height));
+            rectangles.Add(new Rectangle(0, 0, groundTexture.Width, groundTexture.Height));
+            rectangles.Add(new Rectangle(0, backgroundHeight - groundTexture.Height, groundTexture.Width, groundTexture.Height));
 
             return rectangles;
 

@@ -46,8 +46,6 @@ namespace DKoFinal.Renderers
             playerFall = dkoFinal.Content.Load<Texture2D>("Level1/Fall");
             playerDoubleJump = dkoFinal.Content.Load<Texture2D>("Level1/DoubleJump");
 
-            //Texture2D groundTexture = dkoFinal.Content.Load<Texture2D>("Level1/Ground");
-
             this.spriteBatch = spriteBatch;
             position = new Vector2(backgroundWidth/2, backgroundHeight/2);
 
