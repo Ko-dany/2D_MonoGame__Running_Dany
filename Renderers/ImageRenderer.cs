@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DKoFinal.Renderers
 {
-    internal class ImageRenderer : DrawableGameComponent
+    public class ImageRenderer : DrawableGameComponent
     {
         SpriteBatch spriteBatch;
         Texture2D texture;

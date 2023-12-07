@@ -14,10 +14,10 @@ namespace DKoFinal.Renderers
         private Texture2D obstacleTexture;
         private Vector2 position;
         private Vector2 speed;
-        public ObstacleRenderer(Game game, SpriteBatch spriteBatch, Texture2D tex, Vector2 position, Vector2 speed) : base(game)
+        public ObstacleRenderer(Game game, SpriteBatch spriteBatch, Texture2D obstacleTexture, Vector2 position, Vector2 speed) : base(game)
         {
             this.spriteBatch = spriteBatch;
-            this.obstacleTexture = tex;
+            this.obstacleTexture = obstacleTexture;
             this.position = position;
             this.speed = speed;
         }

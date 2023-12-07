@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DKoFinal.Renderers
 {
-    internal class MenuRenderer : DrawableGameComponent
+    public class MenuRenderer : DrawableGameComponent
     {
         SpriteBatch spriteBatch;
         SpriteFont regular, selected;

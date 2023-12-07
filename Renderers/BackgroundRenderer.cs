@@ -10,7 +10,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.Taskbar;
 
 namespace DKoFinal.Renderers
 {
-    internal class BackgroundRenderer : DrawableGameComponent
+    public class BackgroundRenderer : DrawableGameComponent
     {
         SpriteBatch spriteBatch;
         Texture2D mainBackgroundImg;

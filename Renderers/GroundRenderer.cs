@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace DKoFinal.Renderers
 {
-    internal class GroundRenderer : DrawableGameComponent
+    public class GroundRenderer : DrawableGameComponent
     {
-        SpriteBatch spriteBath;
+        SpriteBatch spriteBatch;
         Texture2D groundTexture;
-        Vector2 position1, position2;
+        Vector2 bottomPosition1, topPosition1, bottomPosition2, topPosition2;
         Rectangle srcRectangle;
         Color color;
         float rotation;
@@ -21,54 +21,84 @@ namespace DKoFinal.Renderers
         SpriteEffects spriteEffects;
         float layerDepth;
 
-        Vector2 speed;
+        float speed;
 
         public GroundRenderer(Game game, SpriteBatch spriteBath,int backgroundHeight):base(game)
         {
             DkoFinal dkoFinal = (DkoFinal)game;
 
-            this.spriteBath = spriteBath;
+            this.spriteBatch = spriteBath;
             
             groundTexture = dkoFinal.Content.Load<Texture2D>("Level1/Spikes");
-            position1 = new Vector2(0, 0);
-            position2 = new Vector2(position1.X + srcRectangle.Width, position1.Y);
+
+            topPosition1 = new Vector2(0, 0);
+            bottomPosition1 = new Vector2(0, backgroundHeight - groundTexture.Height);
+
+            topPosition2 = new Vector2(bottomPosition1.X + groundTexture.Width, 0);
+            bottomPosition2 = new Vector2(bottomPosition1.X + groundTexture.Width, backgroundHeight - groundTexture.Height);
 
             srcRectangle = new Rectangle(0,0, groundTexture.Width, groundTexture.Height);
             color = Color.White;
             rotation = 0.0f;
-            origin = new Vector2(0, groundTexture.Height);
-            scale = 4.0f;
+            origin = new Vector2(0, 0);
+            scale = 1.0f;
             spriteEffects = SpriteEffects.None;
             layerDepth = 0.0f;
 
-            speed = new Vector2(2,0);
+            speed = 2.0f;
         }
 
         public override void Update(GameTime gameTime)
         {
-            position1 -= speed;
-            position2 -= speed;
+            bottomPosition1.X -= speed;
+            topPosition1.X -= speed;
+            bottomPosition2.X -= speed;
+            topPosition2.X -= speed;
 
-            if (position1.X < -srcRectangle.Width)
+            if (bottomPosition1.X + groundTexture.Width < 0)
             {
-                position1.X = position2.X + srcRectangle.Width;
+                bottomPosition1.X = topPosition2.X + groundTexture.Width;
             }
-            if(position2.X < -srcRectangle.Width)
+            if (topPosition1.X + groundTexture.Width < 0)
             {
-                position2.X = position1.X + srcRectangle.Width;
+                topPosition1.X = bottomPosition2.X + groundTexture.Width;
             }
 
+            if (bottomPosition2.X + groundTexture.Width < 0)
+            {
+                bottomPosition2.X = topPosition1.X + groundTexture.Width;
+            }
+            if (topPosition2.X + groundTexture.Width < 0)
+            {
+                topPosition2.X = bottomPosition1.X + groundTexture.Width;
+            }
 
             base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
         {
-            spriteBath.Begin();
-            spriteBath.Draw(groundTexture, position1, srcRectangle, color, rotation, origin, scale, spriteEffects, layerDepth);
-            spriteBath.Draw(groundTexture, position2, srcRectangle, color, rotation, origin, scale, spriteEffects, layerDepth);
-            spriteBath.End();
+            spriteBatch.Begin();
+            spriteBatch.Draw(groundTexture, bottomPosition1, srcRectangle, color, rotation, origin, scale, spriteEffects, layerDepth);
+            spriteBatch.Draw(groundTexture, topPosition1, srcRectangle, color, rotation, origin, scale, SpriteEffects.FlipVertically, layerDepth);
+
+            spriteBatch.Draw(groundTexture, bottomPosition2, srcRectangle, color, rotation, origin, scale, spriteEffects, layerDepth);
+            spriteBatch.Draw(groundTexture, topPosition2, srcRectangle, color, rotation, origin, scale, SpriteEffects.FlipVertically, layerDepth);
+
+            spriteBatch.End();
             base.Draw(gameTime);
+        }
+
+        public List<Rectangle> GetBounds()
+        {
+            List<Rectangle> rectangles = new List<Rectangle>();
+            rectangles.Add(new Rectangle((int)topPosition1.X, (int)topPosition1.Y, groundTexture.Width, groundTexture.Height));
+            rectangles.Add(new Rectangle((int)bottomPosition1.X, (int)bottomPosition1.Y, groundTexture.Width, groundTexture.Height));
+            rectangles.Add(new Rectangle((int)topPosition2.X, (int)topPosition2.Y, groundTexture.Width, groundTexture.Height));
+            rectangles.Add(new Rectangle((int)bottomPosition2.X, (int)bottomPosition2.Y, groundTexture.Width, groundTexture.Height));
+
+            return rectangles;
+
         }
     }
 }

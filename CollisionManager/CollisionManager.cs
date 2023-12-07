@@ -9,11 +9,12 @@ using System.Threading.Tasks;
 
 namespace DKoFinal.GameManager
 {
-    public class PipeCollision : GameComponent
+    public class CollisionManager : GameComponent
     {
-        private PlayerCharacter player;
-        private ObstacleRenderer pipe;
-        public PipeCollision(Game game, PlayerCharacter player, ObstacleRenderer pipe) : base(game)
+        PlayerCharacter player;
+        ObstacleRenderer pipe;
+
+        public CollisionManager(Game game, PlayerCharacter player, ObstacleRenderer pipe) : base(game)
         {
             this.player = player;
             this.pipe = pipe;
@@ -28,6 +29,7 @@ namespace DKoFinal.GameManager
             {
                 Debug.WriteLine("PipeHit==============================================");
             }
+
             base.Update(gameTime);
         }
     }
