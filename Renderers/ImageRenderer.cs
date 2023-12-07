@@ -35,11 +35,12 @@ namespace DKoFinal.Renderers
             this.layerDepth = layerDepth;
         }
 
-        public void Draw()
+        public override void Draw(GameTime gameTime)
         {
             spriteBatch.Begin();
             spriteBatch.Draw(texture, position, srcRectangle, color, rotation, origin, scale, spriteEffect, layerDepth);
             spriteBatch.End();
+            base.Draw(gameTime);
         }
 
     }

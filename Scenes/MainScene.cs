@@ -33,24 +33,20 @@ namespace DKoFinal.Scenes
             regular = dkoFinal.Content.Load<SpriteFont>("Fonts/regular");
             selected = dkoFinal.Content.Load<SpriteFont>("Fonts/selected");
 
-            mainBackground = new BackgroundRenderer(spriteBatch, mainBackgroundImg, backgroundWidth, backgroundHeight);
+            mainBackground = new BackgroundRenderer(dkoFinal, spriteBatch, mainBackgroundImg, backgroundWidth, backgroundHeight);
 
             menuTitle = new ImageRenderer(dkoFinal, spriteBatch, mainTitleImg, new Vector2(backgroundWidth / 2, backgroundHeight / 3), new Rectangle(0, 0, mainTitleImg.Width, mainTitleImg.Height), Color.White, new Vector2(mainTitleImg.Width / 2, mainTitleImg.Height / 2), 0.0f, 0.3f, SpriteEffects.None, 0.0f);
 
             menuSelection = new MenuRenderer(dkoFinal, spriteBatch, regular, selected, new Vector2(backgroundWidth/2, backgroundHeight/5*3), Color.White, Color.Black, new string[] { "START", "HELP", "ABOUT", "EXIT" });
+
+            this.Components.Add(mainBackground);
+            this.Components.Add(menuTitle);
             this.Components.Add(menuSelection);
         }
         public override void Draw(GameTime gameTime)
         {
-            // Drawing the background
-            mainBackground.Draw();
-
-            // Drawing the title
-            menuTitle.Draw();
-
             spriteBatch.Begin();
             spriteBatch.End();
-
             base.Draw(gameTime);
         }
 

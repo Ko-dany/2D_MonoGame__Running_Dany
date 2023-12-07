@@ -1,4 +1,5 @@
-﻿using DKoFinal.Renderers;
+﻿using DKoFinal.GameManager;
+using DKoFinal.Renderers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -24,19 +25,23 @@ namespace DKoFinal.Scenes
             DkoFinal dkoFinal = (DkoFinal)game;
             spriteBatch = dkoFinal.spriteBatch;
             mainBackgroundImg = dkoFinal.Content.Load<Texture2D>("Level1/Yellow");
-            mainBackground = new BackgroundRenderer(spriteBatch, mainBackgroundImg, backgroundWidth, backgroundHeight);
 
-            //groundRenderer = new GroundRenderer(dkoFinal, spriteBatch, backgroundHeight);
-            //this.Components.Add(groundRenderer);
-
+            mainBackground = new BackgroundRenderer(dkoFinal, spriteBatch, mainBackgroundImg, backgroundWidth, backgroundHeight);
+            groundRenderer = new GroundRenderer(dkoFinal, spriteBatch, backgroundHeight);
+            ObstacleRenderer pipe = new ObstacleRenderer(dkoFinal, spriteBatch, dkoFinal.Content.Load<Texture2D>("Level1/Pipe"), new Vector2(backgroundWidth + 500, 300), new Vector2(3, 0));
             player = new PlayerCharacter(dkoFinal, spriteBatch, backgroundWidth, backgroundHeight);
+
             this.Components.Add(player);
+            this.Components.Add(pipe);
+            this.Components.Add(groundRenderer);
+
+            PipeCollision collision = new PipeCollision(dkoFinal, player, pipe);
+            this.Components.Add(collision);
+
         }
 
         public override void Draw(GameTime gameTime)
         {
-            mainBackground.Draw();
-
             spriteBatch.Begin();
             spriteBatch.End();
 

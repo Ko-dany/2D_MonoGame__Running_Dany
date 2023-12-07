@@ -6,13 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace DKoFinal.Renderers
 {
-    internal class PlayerCharacter : DrawableGameComponent
+    public class PlayerCharacter : DrawableGameComponent
     {
-        const int idle_COL = 11;
-        const int run_COL = 12;
         const int doubleJump_COL = 6;
 
         SpriteBatch spriteBatch;
@@ -47,7 +46,7 @@ namespace DKoFinal.Renderers
             playerFall = dkoFinal.Content.Load<Texture2D>("Level1/Fall");
             playerDoubleJump = dkoFinal.Content.Load<Texture2D>("Level1/DoubleJump");
 
-            Texture2D groundTexture = dkoFinal.Content.Load<Texture2D>("Level1/Ground");
+            //Texture2D groundTexture = dkoFinal.Content.Load<Texture2D>("Level1/Ground");
 
             this.spriteBatch = spriteBatch;
             position = new Vector2(backgroundWidth/2, backgroundHeight/2);
@@ -138,5 +137,11 @@ namespace DKoFinal.Renderers
             spriteBatch.End();
             base.Draw(gameTime);
         }
+
+        public Rectangle GetBounds()
+        {
+            return new Rectangle((int)position.X, (int)position.Y, playerFall.Width, playerFall.Height);
+        }
+
     }
 }

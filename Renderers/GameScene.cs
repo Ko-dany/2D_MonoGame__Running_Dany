@@ -31,11 +31,15 @@ namespace DKoFinal.Renderers
 
         public override void Draw(GameTime gameTime)
         {
-            foreach (DrawableGameComponent component in Components)
+            foreach (GameComponent component in Components)
             {
-                if (component.Visible)
+                if (component is DrawableGameComponent)
                 {
-                    component.Draw(gameTime);
+                    DrawableGameComponent comp = (DrawableGameComponent)component;
+                    if (comp.Visible)
+                    {
+                        comp.Draw(gameTime);
+                    }
                 }
             }
             base.Draw(gameTime);

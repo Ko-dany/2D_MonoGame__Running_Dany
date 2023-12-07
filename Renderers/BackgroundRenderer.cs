@@ -10,14 +10,14 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.Taskbar;
 
 namespace DKoFinal.Renderers
 {
-    internal class BackgroundRenderer
+    internal class BackgroundRenderer : DrawableGameComponent
     {
         SpriteBatch spriteBatch;
         Texture2D mainBackgroundImg;
         int backgroundWidth;
         int backgroundHeight;
 
-        public BackgroundRenderer(SpriteBatch spriteBatch, Texture2D mainBackgroundImg, int backgroundWidth, int backgroundHeight)
+        public BackgroundRenderer(Game game, SpriteBatch spriteBatch, Texture2D mainBackgroundImg, int backgroundWidth, int backgroundHeight):base(game)
         {
             this.spriteBatch = spriteBatch;
             this.mainBackgroundImg = mainBackgroundImg;
@@ -25,11 +25,10 @@ namespace DKoFinal.Renderers
             this.backgroundHeight = backgroundHeight;
         }
 
-        public void Draw()
+        public override void Draw(GameTime gameTime)
         {
             spriteBatch.Begin();
 
-            // Drawing the background
             for (int y = 0; y < backgroundHeight / mainBackgroundImg.Height; y++)
             {
                 for (int x = 0; x < backgroundWidth / mainBackgroundImg.Width; x++)
@@ -38,6 +37,8 @@ namespace DKoFinal.Renderers
                 }
             }
             spriteBatch.End();
+            base.Draw(gameTime);
         }
+
     }
 }

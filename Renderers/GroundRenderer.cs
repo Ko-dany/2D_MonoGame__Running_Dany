@@ -29,9 +29,10 @@ namespace DKoFinal.Renderers
 
             this.spriteBath = spriteBath;
             
-            groundTexture = dkoFinal.Content.Load<Texture2D>("Level1/Ground");
-            position1 = new Vector2(0, backgroundHeight);
+            groundTexture = dkoFinal.Content.Load<Texture2D>("Level1/Spikes");
+            position1 = new Vector2(0, 0);
             position2 = new Vector2(position1.X + srcRectangle.Width, position1.Y);
+
             srcRectangle = new Rectangle(0,0, groundTexture.Width, groundTexture.Height);
             color = Color.White;
             rotation = 0.0f;
