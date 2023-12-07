@@ -18,6 +18,7 @@ namespace DKoFinal
         HelpScene helpScene;
         AboutScene aboutScene;
         GameLevel1 gameLevel1;
+        MenuDuringGameScene menuDuringGame;
         GameResultScene gameResult;
 
         List<GameScene> gameScenes;
@@ -66,15 +67,19 @@ namespace DKoFinal
             this.Components.Add(gameLevel1);
             gameLevel1.Display();
 
+            menuDuringGame = new MenuDuringGameScene(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+            this.Components.Add(menuDuringGame);
+
             gameResult = new GameResultScene(this, "GAME OVER!", graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             this.Components.Add(gameResult);
+
         }
 
         protected override void Update(GameTime gameTime)
         {
             KeyboardState ks = Keyboard.GetState();
 
-            if (mainScene.Visible)
+            if (mainScene.Visible || menuDuringGame.Visible)
             {
                 if (ks.IsKeyDown(Keys.Enter))
                 {
@@ -105,7 +110,14 @@ namespace DKoFinal
                 if (ks.IsKeyDown(Keys.Escape))
                 {
                     HideAllScenes();
-                    mainScene.Display();
+                    if (gameStarted)
+                    {
+                        menuDuringGame.Display();
+                    }
+                    else
+                    {
+                        mainScene.Display();
+                    }
                 }
             }
 
