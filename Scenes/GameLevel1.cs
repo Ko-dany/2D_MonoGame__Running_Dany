@@ -19,8 +19,8 @@ namespace DKoFinal.Scenes
         BackgroundRenderer mainBackground;
         PlayerCharacter player;
 
+        ObstacleAnimationRenderer obstacle;
         ObstacleCollisionManager obstacleCollision;
-
         GameResultScene gameResultScene;
 
         bool gameOver;
@@ -31,6 +31,7 @@ namespace DKoFinal.Scenes
             DkoFinal dkoFinal = (DkoFinal)game;
             spriteBatch = dkoFinal.spriteBatch;
             mainBackgroundImg = dkoFinal.Content.Load<Texture2D>("Level1/Yellow");
+            Texture2D obstacleImage = dkoFinal.Content.Load<Texture2D>("Level1/SpikeHead");
 
             mainBackground = new BackgroundRenderer(dkoFinal, spriteBatch, mainBackgroundImg, backgroundWidth, backgroundHeight);
             this.Components.Add(mainBackground);
@@ -38,7 +39,7 @@ namespace DKoFinal.Scenes
             player = new PlayerCharacter(dkoFinal, spriteBatch, backgroundWidth, backgroundHeight);
             this.Components.Add(player);
 
-            ObstacleRenderer obstacle = new ObstacleRenderer(dkoFinal, spriteBatch, dkoFinal.Content.Load<Texture2D>("Level1/Pipe"), new Vector2(backgroundWidth + 500, 300), new Vector2(3, 0));
+            obstacle = new ObstacleAnimationRenderer(dkoFinal, spriteBatch, obstacleImage, new Vector2(1000, 300), new Vector2(1,0), 4);
             this.Components.Add(obstacle);
 
             obstacleCollision = new ObstacleCollisionManager(dkoFinal, player, obstacle);
@@ -57,6 +58,7 @@ namespace DKoFinal.Scenes
 
         public override void Update(GameTime gameTime)
         {
+
             if (obstacleCollision.DetectCollision())
             {
                 gameOver = true;
