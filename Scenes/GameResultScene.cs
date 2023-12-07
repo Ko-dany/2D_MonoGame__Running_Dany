@@ -14,15 +14,15 @@ namespace DKoFinal.Scenes
     public class GameResultScene : GameScene
     {
         SpriteBatch spriteBatch;
-        SpriteFont spriteFont;
+        SpriteFont regular, selected;
         string gameResult;
         Vector2 position;
-        Color color;
-        Vector2 origin;
-        float rotation;
-        float scale;
-        SpriteEffects spriteEffect;
-        float layerDepth;
+
+        Texture2D resultBackgroundImg;
+        Background resultBackground;
+
+        Text resultText;
+        MenuSelection menuSelection;
 
         public GameResultScene(Game game, string gameResult, int backgroundWidth, int backgroundHeight) : base(game)
         {
@@ -30,19 +30,24 @@ namespace DKoFinal.Scenes
 
             DkoFinal dkoFinal = (DkoFinal)game;
             spriteBatch = dkoFinal.spriteBatch;
-            spriteFont = dkoFinal.Content.Load<SpriteFont>("Fonts/regular");
+            selected = dkoFinal.Content.Load<SpriteFont>("Fonts/selected");
+            regular = dkoFinal.Content.Load<SpriteFont>("Fonts/regular");
             position = new Vector2(backgroundWidth/2, backgroundHeight/2);
-            color = Color.Black;
-            origin = new Vector2(spriteFont.MeasureString(gameResult).X / 2, spriteFont.LineSpacing / 2);
-            rotation = 0.0f;
-            scale = 1.0f;
-            spriteEffect = SpriteEffects.None;
-            layerDepth = 0.0f;
+
+            resultBackgroundImg = dkoFinal.Content.Load<Texture2D>("MainScene/Blue");
+            resultBackground = new Background(dkoFinal, spriteBatch, resultBackgroundImg, backgroundWidth, backgroundHeight);
+            this.Components.Add(resultBackground);
+
+            menuSelection = new MenuSelection(dkoFinal, spriteBatch, regular, selected, new Vector2(backgroundWidth / 2, backgroundHeight / 5 * 3), Color.White, Color.Black, new string[] { "BACK TO MAIN", "ABOUT", "EXIT" });
+            this.Components.Add(menuSelection);
+
+            resultText = new Text(dkoFinal, gameResult, spriteBatch, regular, new Vector2(backgroundWidth / 2, backgroundHeight / 2));
+            this.Components.Add(resultText);
+
         }
         public override void Draw(GameTime gameTime)
         {
             spriteBatch.Begin();
-            spriteBatch.DrawString(spriteFont, gameResult, position, color, rotation, origin, scale, spriteEffect, layerDepth);
             spriteBatch.End();
 
             base.Draw(gameTime);

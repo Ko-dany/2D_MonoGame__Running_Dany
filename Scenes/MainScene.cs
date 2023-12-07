@@ -21,7 +21,6 @@ namespace DKoFinal.Scenes
         MenuSelection menuSelection;
         Image menuTitle;
 
-
         public MainScene(Game game, int backgroundWidth, int backgroundHeight) : base(game)
         {
             DkoFinal dkoFinal = (DkoFinal)game;
