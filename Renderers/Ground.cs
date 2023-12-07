@@ -9,7 +9,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.Taskbar;
 
 namespace DKoFinal.Renderers
 {
-    public class GroundRenderer : DrawableGameComponent
+    public class Ground : DrawableGameComponent
     {
         SpriteBatch spriteBatch;
         Texture2D groundTexture;
@@ -25,7 +25,7 @@ namespace DKoFinal.Renderers
         float speed;
         int backgroundHeight;
 
-        public GroundRenderer(Game game, SpriteBatch spriteBath,int backgroundHeight):base(game)
+        public Ground(Game game, SpriteBatch spriteBath,int backgroundHeight):base(game)
         {
             DkoFinal dkoFinal = (DkoFinal)game;
 

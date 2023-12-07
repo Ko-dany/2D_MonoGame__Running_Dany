@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace DKoFinal.GameManager
 {
-    public class GroundCollisionManager : GameComponent
+    public class GroundCollision : GameComponent
     {
         PlayerCharacter player;
-        GroundRenderer ground;
+        Ground ground;
 
         bool collided = false;
 
-        public GroundCollisionManager(Game game, PlayerCharacter player, GroundRenderer ground) : base(game)
+        public GroundCollision(Game game, PlayerCharacter player, Ground ground) : base(game)
         {
             this.player = player;
             this.ground = ground;

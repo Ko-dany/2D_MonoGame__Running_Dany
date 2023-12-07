@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DKoFinal.Renderers
 {
-    public class ImageRenderer : DrawableGameComponent
+    public class Image : DrawableGameComponent
     {
         SpriteBatch spriteBatch;
         Texture2D texture;
@@ -21,7 +21,7 @@ namespace DKoFinal.Renderers
         SpriteEffects spriteEffect;
         float layerDepth;
 
-        public ImageRenderer(Game game, SpriteBatch spriteBatch, Texture2D texture, Vector2 position, Rectangle srcRectangle, Color color, Vector2 origin, float rotation, float scale, SpriteEffects spriteEffect, float layerDepth): base(game)
+        public Image(Game game, SpriteBatch spriteBatch, Texture2D texture, Vector2 position, Rectangle srcRectangle, Color color, Vector2 origin, float rotation, float scale, SpriteEffects spriteEffect, float layerDepth): base(game)
         {
             this.spriteBatch = spriteBatch;
             this.texture = texture;

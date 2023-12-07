@@ -9,16 +9,14 @@ using System.Threading.Tasks;
 
 namespace DKoFinal.GameManager
 {
-    public class ObstacleCollisionManager : GameComponent
+    public class ObstacleAnimationCollision : GameComponent
     {
         PlayerCharacter player;
-        ObstacleAnimationRenderer obstacleAnim;
-
-        Rectangle obstacleImgRect;
-        Rectangle obstacleAnimRect;
+        ObstacleAnimation obstacleAnim;
 
         bool collided = false;
-        public ObstacleCollisionManager(Game game, PlayerCharacter player, ObstacleAnimationRenderer obstacleAnim) : base(game)
+
+        public ObstacleAnimationCollision(Game game, PlayerCharacter player, ObstacleAnimation obstacleAnim) : base(game)
         {
             this.player = player;
             this.obstacleAnim = obstacleAnim;
@@ -34,7 +32,11 @@ namespace DKoFinal.GameManager
                 collided = true;
                 Debug.WriteLine("Obstacle just Hit==============================================");
             }
- 
+            else
+            {
+                collided = false;
+            }
+
             base.Update(gameTime);
         }
 

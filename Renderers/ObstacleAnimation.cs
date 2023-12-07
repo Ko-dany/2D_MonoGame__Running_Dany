@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DKoFinal.Renderers
 {
-    public class ObstacleAnimationRenderer : DrawableGameComponent
+    public class ObstacleAnimation : DrawableGameComponent
     {
         int textureColumn;
         SpriteBatch spriteBatch;
@@ -31,7 +31,9 @@ namespace DKoFinal.Renderers
 
         private Vector2 speed;
 
-        public ObstacleAnimationRenderer(Game game, SpriteBatch spriteBatch, Texture2D obstacleTexture, Vector2 position, Vector2 speed, int textureColumn) : base(game)
+        Texture2D ex;
+
+        public ObstacleAnimation(Game game, SpriteBatch spriteBatch, Texture2D obstacleTexture, Vector2 position, Vector2 speed, int textureColumn) : base(game)
         {
             this.textureColumn = textureColumn;
             this.spriteBatch = spriteBatch;
@@ -39,10 +41,14 @@ namespace DKoFinal.Renderers
             this.position = position;
             this.speed = speed;
 
+            // Test for collision
+            DkoFinal dkoFinal = (DkoFinal)game;
+            ex = dkoFinal.Content.Load<Texture2D>("Level1/Pipe");
+
             color = Color.White;
             rotation = 0.0f;
             origin = new Vector2(0,0);
-            scale = 1.0f;
+            scale = 2.0f;
             spriteEffects = SpriteEffects.None;
             layerDepth = 0.0f;
              
@@ -56,7 +62,7 @@ namespace DKoFinal.Renderers
 
         public Rectangle GetBounds()
         {
-            return new Rectangle((int)position.X, (int)position.Y, obstacleTexture.Width, obstacleTexture.Height);
+            return new Rectangle((int)position.X, (int)position.Y, (obstacleTexture.Width/textureColumn)*(int)scale, (obstacleTexture.Height)*(int)scale);
         }
 
         public override void Update(GameTime gameTime)
@@ -80,6 +86,10 @@ namespace DKoFinal.Renderers
         public override void Draw(GameTime gameTime)
         {
             spriteBatch.Begin();
+
+            // Test for collision
+            //spriteBatch.Draw(ex, position, GetBounds(), color, rotation, origin, scale/scale, spriteEffects, layerDepth);
+
             spriteBatch.Draw(obstacleTexture, position, obstacleRectangles[currentRectangleIndex], color, rotation, origin, scale, spriteEffects, layerDepth);
             spriteBatch.End();
 

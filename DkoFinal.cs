@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SharpDX.WIC;
+using System;
 using System.Collections.Generic;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Taskbar;
 
@@ -19,7 +20,7 @@ namespace DKoFinal
         AboutScene aboutScene;
         GameLevel1 gameLevel1;
         MenuDuringGameScene menuDuringGame;
-        GameResultScene gameResult;
+        GameResultScene gameResult; 
 
         List<GameScene> gameScenes;
 
@@ -30,6 +31,9 @@ namespace DKoFinal
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+
+            IsFixedTimeStep = true;
+            TargetElapsedTime = TimeSpan.FromMilliseconds(16.666);
 
             graphics.PreferredBackBufferWidth = 64 * 14;
             graphics.PreferredBackBufferHeight = 64 * 8;

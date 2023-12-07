@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DKoFinal.Renderers
 {
-    public class MenuRenderer : DrawableGameComponent
+    public class MenuSelection : DrawableGameComponent
     {
         SpriteBatch spriteBatch;
         SpriteFont regular, selected;
@@ -26,7 +26,7 @@ namespace DKoFinal.Renderers
 
         KeyboardState oldState;
 
-        public MenuRenderer(Game game, SpriteBatch spriteBatch, SpriteFont regular, SpriteFont selected, Vector2 position, Color regularColor, Color selectedColor, string[] menus) : base(game)
+        public MenuSelection(Game game, SpriteBatch spriteBatch, SpriteFont regular, SpriteFont selected, Vector2 position, Color regularColor, Color selectedColor, string[] menus) : base(game)
         {
             this.spriteBatch = spriteBatch;
             this.regular = regular;

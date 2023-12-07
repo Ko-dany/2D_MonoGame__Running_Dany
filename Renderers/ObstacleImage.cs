@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace DKoFinal.Renderers
 {
-    public class ObstacleRenderer : DrawableGameComponent
+    public class ObstacleImage : DrawableGameComponent
     {
         private SpriteBatch spriteBatch;
         private Texture2D obstacleTexture;
         private Vector2 position;
         private Vector2 speed;
-        public ObstacleRenderer(Game game, SpriteBatch spriteBatch, Texture2D obstacleTexture, Vector2 position, Vector2 speed) : base(game)
+        public ObstacleImage(Game game, SpriteBatch spriteBatch, Texture2D obstacleTexture, Vector2 position, Vector2 speed) : base(game)
         {
             this.spriteBatch = spriteBatch;
             this.obstacleTexture = obstacleTexture;
