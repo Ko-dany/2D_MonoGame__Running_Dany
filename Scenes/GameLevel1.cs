@@ -69,7 +69,6 @@ namespace DKoFinal.Scenes
         public override void Update(GameTime gameTime)
         {
             gameOver = obstacleCollision.DetectCollision();
-            Debug.WriteLine("Game Over!! =======================");
             base.Update(gameTime);
         }
 

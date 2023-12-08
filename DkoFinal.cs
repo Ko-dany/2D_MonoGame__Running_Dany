@@ -16,6 +16,7 @@ namespace DKoFinal
         public SpriteBatch spriteBatch;
 
         SpriteFont scoreFont;
+        Text scoreText;
 
         MainScene mainScene;
         HelpScene helpScene;
@@ -23,8 +24,6 @@ namespace DKoFinal
         GameLevel1 gameLevel1;
         MenuDuringGameScene menuDuringGame;
         GameResultScene gameResult;
-
-        Text scoreText;
 
         List<GameScene> gameScenes;
 
@@ -34,6 +33,10 @@ namespace DKoFinal
         TimeSpan gamePlayedTime;
         double gameScore;
         string gameTimeResult;
+
+        bool isTransitioning;
+        TimeSpan transitionCooldown = TimeSpan.FromSeconds(1.0);
+        TimeSpan elapsedTransitionTime;
 
         public DkoFinal()
         {
@@ -53,14 +56,24 @@ namespace DKoFinal
             }
         }
 
-        protected override void Initialize()
+        private void InitializeHelper()
         {
+            isTransitioning = false;
+
             gameStarted = false;
             gamePaused = false;
             gameEnded = false;
             gameScore = 0.00;
             gamePlayedTime = TimeSpan.Zero;
 
+            mainScene.Display();
+        }
+
+        protected override void Initialize()
+        {
+
+
+            isTransitioning = false;
             base.Initialize();
         }
 
@@ -72,7 +85,7 @@ namespace DKoFinal
 
             mainScene = new MainScene(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             this.Components.Add(mainScene);
-            //mainScene.Display();
+            mainScene.Display();
 
             helpScene = new HelpScene(this);
             this.Components.Add(helpScene);
@@ -82,7 +95,6 @@ namespace DKoFinal
 
             gameLevel1 = new GameLevel1(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             this.Components.Add(gameLevel1);
-            gameLevel1.Display();
 
             menuDuringGame = new MenuDuringGameScene(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             this.Components.Add(menuDuringGame);
@@ -92,7 +104,15 @@ namespace DKoFinal
         {
             KeyboardState ks = Keyboard.GetState();
 
-            if (mainScene.Visible || menuDuringGame.Visible)
+            /*
+            if (ks.IsKeyDown(Keys.I))
+            {
+                Initialize();
+            }
+            */
+
+            /* ================= Main Menu Scene ================= */
+            if (mainScene.Visible)
             {
                 if (ks.IsKeyDown(Keys.Enter))
                 {
@@ -103,7 +123,6 @@ namespace DKoFinal
                         case 0:
                             gameLevel1.Display();
                             gameStarted = true;
-                            gamePaused = false;
                             break;
                         case 1:
                             helpScene.Display();
@@ -119,44 +138,42 @@ namespace DKoFinal
                     }
                 }
             }
-            else
+
+            /* ================= Help/About Page ================= */
+            // When Esc is pressed, this will go back to the previous menus (main / during game / game result)
+            if (helpScene.Visible || aboutScene.Visible)
             {
                 if (ks.IsKeyDown(Keys.Escape))
                 {
                     HideAllScenes();
-                    if (gameStarted)
-                    {
-                        menuDuringGame.Display();
-                        gamePaused = true;
-                    }
-                    else
+                    if (!gameStarted)
                     {
                         mainScene.Display();
+                    }
+                    else if (gameStarted && gamePaused)
+                    {
+                        menuDuringGame.Display();
+                    }
+                    else if (gameEnded)
+                    {
+                        gameResult.Display();
                     }
                 }
             }
 
-            if (gameStarted && !gamePaused && !gameEnded)
-            { 
-                gamePlayedTime += gameTime.ElapsedGameTime;
-                gameScore = Math.Round(gamePlayedTime.TotalSeconds, 2);
-
-                /* ==== 게임 시간 스코어 테스트
-                scoreText = new Text(this, gameScore.ToString(), spriteBatch, scoreFont, new Vector2(20, 20));
-                this.Components.Add(scoreText);
-                */
-            }
-
+            /* ================= Game Scene ================= */
             if (gameLevel1.Visible)
             {
+                if (ks.IsKeyDown(Keys.Escape))
+                {
+                    HideAllScenes();
+                    gamePaused = true;
+                    menuDuringGame.Display();
+                }
+
                 if (gameLevel1.CheckGameOver())
                 {
-
-                    Debug.WriteLine("Game Over Scene must be shown =======================");
-                    // 특정 오브젝트에 충돌했을 때만 여기까지 닿는다. 왜지?
-
                     HideAllScenes();
-
                     gameEnded = true;
 
                     /* ==== 게임 시간 표기 테스트 (시간/분/초)
@@ -193,6 +210,69 @@ namespace DKoFinal
                 }
             }
 
+            /* ================= Menu Scene During game is on ================= */
+            if (menuDuringGame.Visible)
+            {
+                if (ks.IsKeyDown(Keys.Enter))
+                {
+                    int selectedScene = menuDuringGame.GetSelectedIndex();
+                    HideAllScenes();
+                    switch (selectedScene)
+                    {
+                        case 0:
+                            gameLevel1.Display();
+                            gamePaused = false;
+                            break;
+                        case 1:
+                            helpScene.Display();
+                            break;
+                        case 2:
+                            aboutScene.Display();
+                            break;
+                        case 3:
+                            Initialize();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+            /* ================= Game Result Scene ================= */
+            if (gameResult != null && gameResult.Visible)
+            {
+                if (ks.IsKeyDown(Keys.Enter))
+                {
+                    int selectedScene = gameResult.GetSelectedIndex();
+                    HideAllScenes();
+                    switch (selectedScene)
+                    {
+                        case 0:
+                            Initialize();
+                            break;
+                        case 1:
+                            aboutScene.Display();
+                            break;
+                        case 2:
+                            Exit();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+            // Recording the elapsed time since the game started.
+            if (gameStarted && !gamePaused && !gameEnded)
+            { 
+                gamePlayedTime += gameTime.ElapsedGameTime;
+                gameScore = Math.Round(gamePlayedTime.TotalSeconds, 2);
+
+                /* ==== 게임 시간 스코어 테스트
+                scoreText = new Text(this, gameScore.ToString(), spriteBatch, scoreFont, new Vector2(20, 20));
+                this.Components.Add(scoreText);
+                */
+            }
             base.Update(gameTime);
         }
 

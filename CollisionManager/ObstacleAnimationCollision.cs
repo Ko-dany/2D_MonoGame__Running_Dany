@@ -32,7 +32,6 @@ namespace DKoFinal.GameManager
                 if (playerRect.Intersects(obstacleAnimRect))
                 {
                     collided = true;
-                    Debug.WriteLine("Obstacle just Hit==============================================");
                     break;
                 }
                 else

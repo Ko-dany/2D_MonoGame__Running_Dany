@@ -37,7 +37,7 @@ namespace DKoFinal.Scenes
 
             menuTitle = new Image(dkoFinal, spriteBatch, mainTitleImg, new Vector2(backgroundWidth / 2, backgroundHeight / 3), new Rectangle(0, 0, mainTitleImg.Width, mainTitleImg.Height), Color.White, new Vector2(mainTitleImg.Width / 2, mainTitleImg.Height / 2), 0.0f, 0.3f, SpriteEffects.None, 0.0f);
 
-            menuSelection = new MenuSelection(dkoFinal, spriteBatch, regular, selected, new Vector2(backgroundWidth/2, backgroundHeight/5*3), Color.White, Color.Black, new string[] { "RESUME", "HELP", "ABOUT", "EXIT" });
+            menuSelection = new MenuSelection(dkoFinal, spriteBatch, regular, selected, new Vector2(backgroundWidth/2, backgroundHeight/5*3), Color.White, Color.Black, new string[] { "RESUME", "HELP", "ABOUT", "BACK TO MAIN" });
 
             this.Components.Add(mainBackground);
             this.Components.Add(menuTitle);

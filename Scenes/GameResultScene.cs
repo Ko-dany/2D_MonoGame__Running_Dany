@@ -51,5 +51,15 @@ namespace DKoFinal.Scenes
 
             base.Draw(gameTime);
         }
+
+        public void InputGameResult(string gameResult)
+        {
+            this.gameResult = gameResult;
+        }
+
+        public int GetSelectedIndex()
+        {
+            return menuSelection.selectedIndex;
+        }
     }
 }
