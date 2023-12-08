@@ -32,9 +32,10 @@ namespace DKoFinal
         bool gameEnded;
         TimeSpan gamePlayedTime;
         double gameScore;
-        string gameTimeResult;
 
         KeyboardState oldState;
+
+        bool allLevelCleared;
 
         public DkoFinal()
         {
@@ -44,6 +45,22 @@ namespace DKoFinal
 
             graphics.PreferredBackBufferWidth = 64 * 14;
             graphics.PreferredBackBufferHeight = 64 * 8;
+        }
+
+        public string GetGameResultMessage()
+        {
+            string gameTimeResult = String.Empty;
+
+            if (allLevelCleared)
+            {
+                gameTimeResult = "ALL LEVELS CLEARED!\n" + $"Your score: {gameScore}";
+            }
+            else
+            {
+                gameTimeResult = "GAME OVER\n" + $"Your score: {gameScore}";
+            }
+
+            return gameTimeResult;
         }
 
         public void HideAllScenes()
@@ -62,6 +79,8 @@ namespace DKoFinal
             gameScore = 0.00;
             gamePlayedTime = TimeSpan.Zero;
             oldState = Keyboard.GetState();
+
+            allLevelCleared = false;
 
             base.Initialize();
         }
@@ -183,12 +202,14 @@ namespace DKoFinal
                     }
                     */
 
-                    gameTimeResult = $"GAME OVER\n" +
-                        $"Your score: {gameScore}";
-
-                    gameResult = new GameResultScene(this, gameTimeResult, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+                    gameResult = new GameResultScene(this, GetGameResultMessage(), graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
                     this.Components.Add(gameResult);
                     gameResult.Display();
+                }
+
+                if (gameLevel1.CheckGameClear())
+                {
+                    // Level2 starts
                 }
             }
 

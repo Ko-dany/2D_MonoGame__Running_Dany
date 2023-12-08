@@ -1,5 +1,6 @@
 ﻿using DKoFinal.Renderers;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,11 +14,15 @@ namespace DKoFinal.GameManager
     {
         PlayerCharacter player;
         List<ObstacleAnimation> obstacleAnims;
+        SoundEffect playerDeathSound;
 
         bool collided = false;
 
         public ObstacleAnimationCollision(Game game, PlayerCharacter player, List<ObstacleAnimation> obstacleAnims) : base(game)
         {
+            DkoFinal dkoFinal = (DkoFinal)game;
+            playerDeathSound = dkoFinal.Content.Load<SoundEffect>("Sounds/Die");
+
             this.player = player;
             this.obstacleAnims = obstacleAnims;
         }
@@ -31,6 +36,7 @@ namespace DKoFinal.GameManager
                 Rectangle obstacleAnimRect = obstacle.GetBounds();
                 if (playerRect.Intersects(obstacleAnimRect))
                 {
+                    playerDeathSound.Play();
                     collided = true;
                     break;
                 }

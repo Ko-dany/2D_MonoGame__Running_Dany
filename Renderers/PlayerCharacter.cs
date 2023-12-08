@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -35,19 +36,17 @@ namespace DKoFinal.Renderers
 
         int currentDoubleJump = 0;
         bool isJumping = false;
+        SoundEffect playerJumpSound;
 
         int delay = 30;
         float counter = 0;
-
-        Texture2D ex;
 
         public PlayerCharacter(Game game, SpriteBatch spriteBatch, int backgroundWidth, int backgroundHeight) :base(game)
         {
             DkoFinal dkoFinal = (DkoFinal)game;
             playerFall = dkoFinal.Content.Load<Texture2D>("Level1/Fall");
             playerDoubleJump = dkoFinal.Content.Load<Texture2D>("Level1/DoubleJump");
-
-            ex = dkoFinal.Content.Load<Texture2D>("Level1/Pipe");
+            playerJumpSound = dkoFinal.Content.Load<SoundEffect>("Sounds/Jump");
 
             this.spriteBatch = spriteBatch;
             position = new Vector2(backgroundWidth/2, backgroundHeight/2);
@@ -75,6 +74,7 @@ namespace DKoFinal.Renderers
 
             if (ks.IsKeyDown(Keys.Space) && !isJumping)
             {
+                playerJumpSound.Play();
                 velocityY = -jumpForce;
                 isJumping = true;
             }
@@ -128,13 +128,11 @@ namespace DKoFinal.Renderers
 
             if (!isJumping)
             {
-                //spriteBatch.Draw(ex, position, GetBounds(), color, rotation, origin, scale/scale, spriteEffects, layerDepth);
                 spriteBatch.Draw(playerFall, position, new Rectangle(0,0, playerFall.Width, playerFall.Height), color, rotation, origin, scale, spriteEffects, layerDepth);
 
             }
             else
             {
-                //spriteBatch.Draw(ex, position, GetBounds(), color, rotation, origin, scale/scale, spriteEffects, layerDepth);
                 spriteBatch.Draw(playerDoubleJump, position, doubleJumpRectangles[currentDoubleJump], color, rotation, origin, scale, spriteEffects, layerDepth);
             }
 
