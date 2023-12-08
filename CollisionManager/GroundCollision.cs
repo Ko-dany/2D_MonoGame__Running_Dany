@@ -36,6 +36,7 @@ namespace DKoFinal.GameManager
             {
                 collided = false;
             }
+
             /*
             List<Rectangle> groundRectangles = ground.GetBounds();
 

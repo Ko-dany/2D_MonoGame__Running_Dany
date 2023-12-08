@@ -34,6 +34,8 @@ namespace DKoFinal
         double gameScore;
         string gameTimeResult;
 
+        KeyboardState oldState;
+
         public DkoFinal()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -59,6 +61,7 @@ namespace DKoFinal
             gameEnded = false;
             gameScore = 0.00;
             gamePlayedTime = TimeSpan.Zero;
+            oldState = Keyboard.GetState();
 
             base.Initialize();
         }
@@ -90,17 +93,10 @@ namespace DKoFinal
         {
             KeyboardState ks = Keyboard.GetState();
 
-            
-            if (ks.IsKeyDown(Keys.I))
-            {
-                Initialize();
-            }
-            
-
             /* ================= Main Menu Scene ================= */
             if (mainScene.Visible)
             {
-                if (ks.IsKeyDown(Keys.Enter))
+                if (ks.IsKeyDown(Keys.Enter) && oldState.IsKeyUp(Keys.Enter))
                 {
                     int selectedScene = mainScene.GetSelectedIndex();
                     HideAllScenes();
@@ -161,7 +157,7 @@ namespace DKoFinal
                 {
                     HideAllScenes();
                     gameEnded = true;
-
+                     
                     /* ==== 게임 시간 표기 테스트 (시간/분/초)
                     double totalSeconds = gamePlayedTime.TotalSeconds;
                     if (totalSeconds > 3600)
@@ -199,7 +195,7 @@ namespace DKoFinal
             /* ================= Menu Scene During game is on ================= */
             if (menuDuringGame.Visible)
             {
-                if (ks.IsKeyDown(Keys.Enter))
+                if (ks.IsKeyDown(Keys.Enter)&& oldState.IsKeyUp(Keys.Enter))
                 {
                     int selectedScene = menuDuringGame.GetSelectedIndex();
                     HideAllScenes();
@@ -259,6 +255,9 @@ namespace DKoFinal
                 this.Components.Add(scoreText);
                 */
             }
+
+            oldState = ks;
+
             base.Update(gameTime);
         }
 
