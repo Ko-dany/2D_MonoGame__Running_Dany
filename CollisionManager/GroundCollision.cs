@@ -24,7 +24,19 @@ namespace DKoFinal.GameManager
 
         public override void Update(GameTime gameTime)
         {
-            Rectangle playerRectangles = player.GetBounds();
+            Rectangle playerRec = player.GetBounds();
+            Rectangle groundRec = ground.GetBottomBound();
+
+            if (playerRec.Intersects(groundRec))
+            {
+                collided = true;
+                Debug.WriteLine("Player should die!");
+            }
+            else
+            {
+                collided = false;
+            }
+            /*
             List<Rectangle> groundRectangles = ground.GetBounds();
 
             foreach(Rectangle groundRec in groundRectangles)
@@ -32,9 +44,15 @@ namespace DKoFinal.GameManager
                 if (playerRectangles.Intersects(groundRec))
                 {
                     collided = true;
-                    Debug.WriteLine("Player should die!!!!!!");
+                    Debug.WriteLine("Player should die!");
+                    break;
+                }
+                else
+                {
+                    collided = false;
                 }
             }
+            */
             base.Update(gameTime);
         }
 

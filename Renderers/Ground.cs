@@ -25,21 +25,15 @@ namespace DKoFinal.Renderers
         float speed;
         int backgroundHeight;
 
-        public Ground(Game game, SpriteBatch spriteBath,int backgroundHeight):base(game)
+        public Ground(Game game, SpriteBatch spriteBatch, Texture2D groundTexture, Vector2 topPosition1, Vector2 bottomPosition1, Vector2 topPosition2, Vector2 bottomPosition2):base(game)
         {
             DkoFinal dkoFinal = (DkoFinal)game;
-
-            this.spriteBatch = spriteBath;
-            this.backgroundHeight = backgroundHeight;
-
-
-            groundTexture = dkoFinal.Content.Load<Texture2D>("Level1/Spikes");
-
-            topPosition1 = new Vector2(0, 0);
-            bottomPosition1 = new Vector2(0, backgroundHeight - groundTexture.Height);
-
-            topPosition2 = new Vector2(bottomPosition1.X + groundTexture.Width, 0);
-            bottomPosition2 = new Vector2(bottomPosition1.X + groundTexture.Width, backgroundHeight - groundTexture.Height);
+            this.groundTexture = groundTexture;
+            this.spriteBatch = spriteBatch;
+            this.topPosition1 = topPosition1;
+            this.bottomPosition1 = bottomPosition1;
+            this.topPosition2 = topPosition2;
+            this.bottomPosition2 = bottomPosition2;
 
             srcRectangle = new Rectangle(0,0, groundTexture.Width, groundTexture.Height);
             color = Color.White;
@@ -97,10 +91,14 @@ namespace DKoFinal.Renderers
         {
             List<Rectangle> rectangles = new List<Rectangle>();
             rectangles.Add(new Rectangle(0, 0, groundTexture.Width, groundTexture.Height));
-            rectangles.Add(new Rectangle(0, backgroundHeight - groundTexture.Height, groundTexture.Width, groundTexture.Height));
+            rectangles.Add(new Rectangle((int)bottomPosition1.X, (int)bottomPosition1.Y, groundTexture.Width, groundTexture.Height));
 
             return rectangles;
+        }
 
+        public Rectangle GetBottomBound()
+        {
+            return new Rectangle((int)bottomPosition1.X, (int)bottomPosition1.Y, groundTexture.Width, groundTexture.Height);
         }
     }
 }

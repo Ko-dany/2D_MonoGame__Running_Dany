@@ -34,10 +34,6 @@ namespace DKoFinal
         double gameScore;
         string gameTimeResult;
 
-        bool isTransitioning;
-        TimeSpan transitionCooldown = TimeSpan.FromSeconds(1.0);
-        TimeSpan elapsedTransitionTime;
-
         public DkoFinal()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -56,24 +52,14 @@ namespace DKoFinal
             }
         }
 
-        private void InitializeHelper()
+        protected override void Initialize()
         {
-            isTransitioning = false;
-
             gameStarted = false;
             gamePaused = false;
             gameEnded = false;
             gameScore = 0.00;
             gamePlayedTime = TimeSpan.Zero;
 
-            mainScene.Display();
-        }
-
-        protected override void Initialize()
-        {
-
-
-            isTransitioning = false;
             base.Initialize();
         }
 
@@ -104,12 +90,12 @@ namespace DKoFinal
         {
             KeyboardState ks = Keyboard.GetState();
 
-            /*
+            
             if (ks.IsKeyDown(Keys.I))
             {
                 Initialize();
             }
-            */
+            
 
             /* ================= Main Menu Scene ================= */
             if (mainScene.Visible)

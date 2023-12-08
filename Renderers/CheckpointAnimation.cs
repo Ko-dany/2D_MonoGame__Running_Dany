@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace DKoFinal.Renderers
 {
-    public class ObstacleAnimation : DrawableGameComponent
+    public class CheckpointAnimation : DrawableGameComponent
     {
-        int textureColumn;
+        const int textureColumn = 10;
         SpriteBatch spriteBatch;
-        Texture2D obstacleTexture;
+        Texture2D checkpointTexture;
         Vector2 position;
         Color color;
         float rotation;
@@ -23,53 +23,51 @@ namespace DKoFinal.Renderers
         SpriteEffects spriteEffects;
         float layerDepth;
 
-        List<Rectangle> obstacleRectangles;
+        List<Rectangle> checkpointRectangles;
         int currentRectangleIndex = 0;
 
-        int delay = 200;
+        int delay = 50;
         float counter = 0;
 
-        private Vector2 speed;
+        Texture2D ex;
 
-        public ObstacleAnimation(Game game, SpriteBatch spriteBatch, Texture2D obstacleTexture, Vector2 position, Vector2 speed, int textureColumn) : base(game)
+        public CheckpointAnimation(Game game, SpriteBatch spriteBatch, Vector2 position) : base(game)
         {
-            this.textureColumn = textureColumn;
             this.spriteBatch = spriteBatch;
-            this.obstacleTexture = obstacleTexture;
             this.position = position;
-            this.speed = speed;
+
+            DkoFinal dkoFinal = (DkoFinal)game;
+            checkpointTexture = dkoFinal.Content.Load<Texture2D>("Level1/Checkpoint");
 
             color = Color.White;
             rotation = 0.0f;
             origin = new Vector2(0,0);
-            scale = 2.0f;
+            scale = 1.5f;
             spriteEffects = SpriteEffects.None;
             layerDepth = 0.0f;
-             
-            obstacleRectangles = new List<Rectangle>();
+
+            checkpointRectangles = new List<Rectangle>();
             for (int i = 0; i < textureColumn; i++)
             {
-                Rectangle rectangle = new Rectangle(i * obstacleTexture.Width / textureColumn, 0, obstacleTexture.Width / textureColumn, obstacleTexture.Height);
-                obstacleRectangles.Add(rectangle);
+                Rectangle rectangle = new Rectangle(i * checkpointTexture.Width / textureColumn, 0, checkpointTexture.Width / textureColumn, checkpointTexture.Height);
+                checkpointRectangles.Add(rectangle);
             }
         }
 
         public Rectangle GetBounds()
         {
-            return new Rectangle((int)position.X, (int)position.Y, (obstacleTexture.Width/textureColumn)*(int)scale, (obstacleTexture.Height)*(int)scale);
+            return new Rectangle((int)position.X, (int)position.Y, (checkpointTexture.Width/textureColumn)*(int)scale, (checkpointTexture.Height)*(int)scale);
         }
 
         public override void Update(GameTime gameTime)
         {
-            position -= speed;
-
             counter += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (counter > delay)
             {
                 counter = 0;
 
                 currentRectangleIndex += 1;
-                if (currentRectangleIndex == obstacleRectangles.Count)
+                if (currentRectangleIndex == checkpointRectangles.Count)
                 {
                     currentRectangleIndex = 0;
                 }
@@ -80,7 +78,7 @@ namespace DKoFinal.Renderers
         public override void Draw(GameTime gameTime)
         {
             spriteBatch.Begin();
-            spriteBatch.Draw(obstacleTexture, position, obstacleRectangles[currentRectangleIndex], color, rotation, origin, scale, spriteEffects, layerDepth);
+            spriteBatch.Draw(checkpointTexture, position, checkpointRectangles[currentRectangleIndex], color, rotation, origin, scale, spriteEffects, layerDepth);
             spriteBatch.End();
 
             base.Draw(gameTime);

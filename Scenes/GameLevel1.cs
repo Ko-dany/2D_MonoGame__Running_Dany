@@ -23,15 +23,21 @@ namespace DKoFinal.Scenes
         ObstacleAnimation obstacle;
         ObstacleAnimationCollision obstacleCollision;
 
+        CheckpointAnimation checkpoint;
+        CheckpointAnimationCollision checkpointCollision;
+
+        Ground ground;
+        GroundCollision groundCollision;
+
         bool gameOver;
 
-        //GroundRenderer ground;
         public GameLevel1(Game game, int backgroundWidth, int backgroundHeight) : base(game)
         {
             DkoFinal dkoFinal = (DkoFinal)game;
             spriteBatch = dkoFinal.spriteBatch;
             mainBackgroundImg = dkoFinal.Content.Load<Texture2D>("Level1/Yellow");
             Texture2D obstacleImage = dkoFinal.Content.Load<Texture2D>("Level1/SpikeHead");
+            Texture2D groundTexture = dkoFinal.Content.Load<Texture2D>("Level1/Spikes");
 
             mainBackground = new Background(dkoFinal, spriteBatch, mainBackgroundImg, backgroundWidth,  backgroundHeight);
             this.Components.Add(mainBackground);
@@ -40,35 +46,46 @@ namespace DKoFinal.Scenes
             this.Components.Add(player);
 
             Random random = new Random();
-            int obstacleCount = 15;
+            const int stages = 4;
+            const int obstacleCount = 3;
 
             List<ObstacleAnimation> obstacles = new List<ObstacleAnimation>();
-            for(int i=0; i< obstacleCount; i++)
+            
+            for(int k = 1; k <= stages; k++)
             {
-                Vector2 randomPosition = new Vector2(random.Next(backgroundWidth, backgroundWidth * 3), random.Next(0, backgroundHeight));
-                Vector2 randomSpeed = new Vector2(random.Next(3,5), random.Next(0,1));
+                for (int i = 0; i < obstacleCount; i++)
+                {
+                    Vector2 randomPosition = new Vector2(random.Next(backgroundWidth*k, backgroundWidth*(k+1)), random.Next(0, backgroundHeight-obstacleImage.Height));
+                    Vector2 randomSpeed = new Vector2(random.Next(3, 5), 0);
 
-                obstacle = new ObstacleAnimation(dkoFinal, spriteBatch, obstacleImage, randomPosition, randomSpeed, 4);
-                obstacles.Add(obstacle);
-                this.Components.Add(obstacle);
+                    obstacle = new ObstacleAnimation(dkoFinal, spriteBatch, obstacleImage, randomPosition, randomSpeed, 4);
+                    obstacles.Add(obstacle);
+                    this.Components.Add(obstacle);
+                }
             }
 
             obstacleCollision = new ObstacleAnimationCollision(dkoFinal, player, obstacles);
             this.Components.Add(obstacleCollision);
 
-            // ===== Level 2 를 위한 지형
-            //ground = new GroundRenderer(dkoFinal, spriteBatch, backgroundHeight);
-            //this.Components.Add(ground);
+            checkpoint = new CheckpointAnimation(dkoFinal, spriteBatch, new Vector2(backgroundWidth - 30, backgroundHeight/2));
+            this.Components.Add(checkpoint);
+            checkpointCollision = new CheckpointAnimationCollision(dkoFinal, player, checkpoint);
+            this.Components.Add(checkpointCollision);
 
-            //GroundCollisionManager groundCollision = new GroundCollisionManager(dkoFinal, player, ground);
-            //this.Components.Add(groundCollision); 
+            ground = new Ground(dkoFinal, spriteBatch, groundTexture, new Vector2(0, -groundTexture.Height), new Vector2(0, backgroundHeight + groundTexture.Height), new Vector2(groundTexture.Width, -groundTexture.Height), new Vector2(groundTexture.Width, backgroundHeight + groundTexture.Height));
+            this.Components.Add(ground);
+            groundCollision = new GroundCollision(dkoFinal, player, ground);
+            this.Components.Add(groundCollision); 
 
             gameOver = false;
         }
 
         public override void Update(GameTime gameTime)
         {
-            gameOver = obstacleCollision.DetectCollision();
+            if(obstacleCollision.DetectCollision() || groundCollision.DetectCollision())
+            {
+                gameOver = true;
+            }
             base.Update(gameTime);
         }
 
