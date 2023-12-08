@@ -3,6 +3,7 @@ using DKoFinal.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using SharpDX.WIC;
 using System;
 using System.Collections.Generic;
@@ -37,6 +38,9 @@ namespace DKoFinal
 
         bool allLevelCleared;
 
+        private Song mainBackgroundMusic;
+        bool mainBackgroundMusicPlaying;
+
         public DkoFinal()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -45,30 +49,6 @@ namespace DKoFinal
 
             graphics.PreferredBackBufferWidth = 64 * 14;
             graphics.PreferredBackBufferHeight = 64 * 8;
-        }
-
-        public string GetGameResultMessage()
-        {
-            string gameTimeResult = String.Empty;
-
-            if (allLevelCleared)
-            {
-                gameTimeResult = "ALL LEVELS CLEARED!\n" + $"Your score: {gameScore}";
-            }
-            else
-            {
-                gameTimeResult = "GAME OVER\n" + $"Your score: {gameScore}";
-            }
-
-            return gameTimeResult;
-        }
-
-        public void HideAllScenes()
-        {
-            foreach (GameScene scene in this.Components)
-            {
-                scene.Hide();
-            }
         }
 
         protected override void Initialize()
@@ -80,6 +60,8 @@ namespace DKoFinal
             gamePlayedTime = TimeSpan.Zero;
             oldState = Keyboard.GetState();
 
+            mainBackgroundMusicPlaying = false;
+
             allLevelCleared = false;
 
             base.Initialize();
@@ -90,6 +72,8 @@ namespace DKoFinal
             spriteBatch = new SpriteBatch(GraphicsDevice);
             gameScenes = new List<GameScene>();
             scoreFont = Content.Load<SpriteFont>("Fonts/regular");
+
+            mainBackgroundMusic = Content.Load<Song>("Sounds/Lobby_Background");
 
             mainScene = new MainScene(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             this.Components.Add(mainScene);
@@ -115,6 +99,12 @@ namespace DKoFinal
             /* ================= Main Menu Scene ================= */
             if (mainScene.Visible)
             {
+                if (!mainBackgroundMusicPlaying)
+                {
+                    PlayBackgroundMusic(mainBackgroundMusic);
+                    mainBackgroundMusicPlaying = true;
+                }
+
                 if (ks.IsKeyDown(Keys.Enter) && oldState.IsKeyUp(Keys.Enter))
                 {
                     int selectedScene = mainScene.GetSelectedIndex();
@@ -286,6 +276,37 @@ namespace DKoFinal
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             base.Draw(gameTime);
+        }
+
+        public void HideAllScenes()
+        {
+            foreach (GameScene scene in this.Components)
+            {
+                scene.Hide();
+            }
+        }
+
+        public string GetGameResultMessage()
+        {
+            string gameTimeResult = String.Empty;
+
+            if (allLevelCleared)
+            {
+                gameTimeResult = "ALL LEVELS CLEARED!\n" + $"Your score: {gameScore}";
+            }
+            else
+            {
+                gameTimeResult = "GAME OVER\n" + $"Your score: {gameScore}";
+            }
+
+            return gameTimeResult;
+        }
+
+        public void PlayBackgroundMusic(Song backgroundMusic)
+        {
+            MediaPlayer.Stop();
+            MediaPlayer.Play(backgroundMusic);
+            MediaPlayer.IsRepeating = true;
         }
     }
 }
