@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SharpDX.Direct2D1.Effects;
+using SharpDX.Direct3D9;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DKoFinal.Renderers
 {
-    public class ObstacleAnimation : DrawableGameComponent
+    public class Obstacle : DrawableGameComponent
     {
         int textureColumn;
         SpriteBatch spriteBatch;
@@ -35,7 +36,7 @@ namespace DKoFinal.Renderers
         Vector2 speed;
         bool hitBottom = false;
 
-        public ObstacleAnimation(Game game, SpriteBatch spriteBatch, Texture2D obstacleTexture, Vector2 position, Vector2 speed, int textureColumn, int backgroundWidth, int backgroundHeight) : base(game)
+        public Obstacle(Game game, SpriteBatch spriteBatch, Texture2D obstacleTexture, float scale, Vector2 position, Vector2 speed, int textureColumn, int backgroundWidth, int backgroundHeight) : base(game)
         {
             this.textureColumn = textureColumn;
             this.spriteBatch = spriteBatch;
@@ -46,7 +47,7 @@ namespace DKoFinal.Renderers
             color = Color.White;
             rotation = 0.0f;
             origin = new Vector2(0,0);
-            scale = 1.8f;
+            this.scale = scale;
             spriteEffects = SpriteEffects.None;
             layerDepth = 0.0f;
 

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DKoFinal.GameManager
 {
-    public class CheckpointAnimationCollision : GameComponent
+    public class CheckpointCollision : GameComponent
     {
         PlayerCharacter player;
         CheckpointAnimation checkpoint;
@@ -18,7 +18,7 @@ namespace DKoFinal.GameManager
 
         bool collided = false;
 
-        public CheckpointAnimationCollision(Game game, PlayerCharacter player, CheckpointAnimation checkpoint) : base(game)
+        public CheckpointCollision(Game game, PlayerCharacter player, CheckpointAnimation checkpoint) : base(game)
         {
             DkoFinal dkoFinal = (DkoFinal)game;
             gameClearSound = dkoFinal.Content.Load<SoundEffect>("Sounds/Finish");

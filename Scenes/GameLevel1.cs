@@ -17,11 +17,11 @@ namespace DKoFinal.Scenes
     {
         SpriteBatch spriteBatch;
 
-        ObstacleAnimation obstacle;
-        ObstacleAnimationCollision obstacleCollision;
+        Obstacle obstacle;
+        ObstacleCollision obstacleCollision;
 
         CheckpointAnimation checkpoint;
-        CheckpointAnimationCollision checkpointCollision;
+        CheckpointCollision checkpointCollision;
 
         Terrain terrain;
         TerrainCollision terrainCollision;
@@ -53,7 +53,7 @@ namespace DKoFinal.Scenes
             const int stages = 5;
             const int obstacleCount = 3;
 
-            List<ObstacleAnimation> obstacles = new List<ObstacleAnimation>();
+            List<Obstacle> obstacles = new List<Obstacle>();
             List<Rectangle> obstacleBounds = new List<Rectangle>();
             for (int k = 1; k <= stages; k++)
             {
@@ -70,14 +70,14 @@ namespace DKoFinal.Scenes
                     Vector2 randomPosition = new Vector2(newObstacleBounds.X, newObstacleBounds.Y);
                     Vector2 randomSpeed = new Vector2(random.Next(3, 5), 0);
 
-                    obstacle = new ObstacleAnimation(dkoFinal, spriteBatch, obstacleImage, randomPosition, randomSpeed, 4, backgroundWidth, backgroundHeight);
+                    obstacle = new Obstacle(dkoFinal, spriteBatch, obstacleImage, 1.8f, randomPosition, randomSpeed, 4, backgroundWidth, backgroundHeight);
                     obstacles.Add(obstacle);
                     this.Components.Add(obstacle);
 
                     obstacleBounds.Add(newObstacleBounds);
                 }
             }
-            obstacleCollision = new ObstacleAnimationCollision(dkoFinal, player, obstacles);
+            obstacleCollision = new ObstacleCollision(dkoFinal, player, obstacles);
             this.Components.Add(obstacleCollision);
 
             /*============ Add terrain component & terrain collision manager ============*/
@@ -90,7 +90,7 @@ namespace DKoFinal.Scenes
             /*============ Add checkpoint component & checkpoint collision manager ============*/
             checkpoint = new CheckpointAnimation(dkoFinal, spriteBatch, new Vector2(backgroundWidth * (stages+1) + backgroundWidth / 3, backgroundHeight / 2));
             this.Components.Add(checkpoint);
-            checkpointCollision = new CheckpointAnimationCollision(dkoFinal, player, checkpoint);
+            checkpointCollision = new CheckpointCollision(dkoFinal, player, checkpoint);
             this.Components.Add(checkpointCollision);
         }
 

@@ -10,15 +10,15 @@ using System.Threading.Tasks;
 
 namespace DKoFinal.GameManager
 {
-    public class ObstacleAnimationCollision : GameComponent
+    public class ObstacleCollision : GameComponent
     {
         PlayerCharacter player;
-        List<ObstacleAnimation> obstacleAnims;
+        List<Obstacle> obstacleAnims;
         SoundEffect playerDeathSound;
 
         bool collided = false;
 
-        public ObstacleAnimationCollision(Game game, PlayerCharacter player, List<ObstacleAnimation> obstacleAnims) : base(game)
+        public ObstacleCollision(Game game, PlayerCharacter player, List<Obstacle> obstacleAnims) : base(game)
         {
             DkoFinal dkoFinal = (DkoFinal)game;
             playerDeathSound = dkoFinal.Content.Load<SoundEffect>("Sounds/Die");
@@ -31,7 +31,7 @@ namespace DKoFinal.GameManager
         {
             Rectangle playerRect = player.GetBounds();
 
-            foreach (ObstacleAnimation obstacle in obstacleAnims)
+            foreach (Obstacle obstacle in obstacleAnims)
             {
                 Rectangle obstacleAnimRect = obstacle.GetBounds();
                 if (playerRect.Intersects(obstacleAnimRect))
