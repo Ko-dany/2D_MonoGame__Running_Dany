@@ -16,9 +16,6 @@ namespace DKoFinal
         public GraphicsDeviceManager graphics;
         public SpriteBatch spriteBatch;
 
-        SpriteFont scoreFont;
-        Text scoreText;
-
         MainScene mainScene;
         HelpScene helpScene;
         AboutScene aboutScene;
@@ -77,7 +74,6 @@ namespace DKoFinal
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             gameScenes = new List<GameScene>();
-            scoreFont = Content.Load<SpriteFont>("Fonts/regular");
 
             mainBackgroundMusic = Content.Load<Song>("Sounds/Lobby_Background");
             gameBackgroundMusic = Content.Load<Song>("Sounds/Game_Background");
@@ -100,6 +96,7 @@ namespace DKoFinal
 
             gameLevel3 = new GameLevel3(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             this.Components.Add(gameLevel3);
+            //gameLevel3.Display();
 
             menuDuringGame = new MenuDuringGameScene(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             this.Components.Add(menuDuringGame);
@@ -266,7 +263,8 @@ namespace DKoFinal
                     {
                         case 0:
                             gamePaused = false;
-                            if (gameLevel1.CheckGameClear()) { gameLevel2.Display(); }
+                            if (gameLevel2.CheckGameClear()) { gameLevel3.Display(); }
+                            else if (gameLevel1.CheckGameClear()) { gameLevel2.Display(); }
                             else { gameLevel1.Display(); }
                             break;
                         case 1:
@@ -308,7 +306,8 @@ namespace DKoFinal
                 }
             }
 
-            if (isGameCleared && gameResult != null && gameClearedScene.Visible)
+            /* ================= Game Cleared Scene ================= */
+            if (isGameCleared && gameClearedScene.Visible)
             {
                 if (ks.IsKeyDown(Keys.Enter))
                 {

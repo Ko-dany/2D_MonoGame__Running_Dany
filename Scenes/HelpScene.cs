@@ -18,7 +18,7 @@ namespace DKoFinal.Scenes
         {
             DkoFinal dkoFinal = (DkoFinal)game;
             spriteBatch = dkoFinal.spriteBatch;
-            helpImg = dkoFinal.Content.Load<Texture2D>("HelpScene/help");
+            helpImg = dkoFinal.Content.Load<Texture2D>("HelpScene/GameHelp");
         }
 
         public override void Draw(GameTime gameTime)

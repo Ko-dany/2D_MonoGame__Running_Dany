@@ -55,7 +55,7 @@ namespace DKoFinal.Scenes
             const int spikeHeadsCount = 4;
             const int movingSawsCount = 5;
 
-            /*============ Generate random obstacle 1 components & add obstacle 1 collision manager ============*/
+            /*============ Generate random obstacle components & obstacle collision managers ============*/
             List<Obstacle> spikeHeads = new List<Obstacle>();
             List<Rectangle> spikeHeadBounds = new List<Rectangle>();
 
@@ -64,8 +64,7 @@ namespace DKoFinal.Scenes
             Vector2 randomSpeed2 = new Vector2(random.Next(3, 5), random.Next(3, 5));
             for (int k = 1; k <= stages; k++)
             {
-                /*============ Generate random obstacle 1 components ============*/
-
+                /*============ Spike Heads ============*/
                 for (int i = 0; i < spikeHeadsCount; i++)
                 {
                     Rectangle newSpikeHeadsBounds = new Rectangle(random.Next(backgroundWidth * k, backgroundWidth * (k + 1)), random.Next(0, backgroundHeight - spikeHeadImage.Height), spikeHeadImage.Width, spikeHeadImage.Height);
@@ -86,8 +85,7 @@ namespace DKoFinal.Scenes
                     spikeHeadBounds.Add(newSpikeHeadsBounds);
                 }
 
-                /*============ Generate random obstacle 2 components ============*/
-
+                /*============ Moving saws ============*/
                 for (int i = 0; i < movingSawsCount; i++)
                 {
                     Rectangle newSawsBounds = new Rectangle(random.Next(backgroundWidth * k, backgroundWidth * (k + 1)), random.Next(0, backgroundHeight - MovingSawImage.Height), MovingSawImage.Width, MovingSawImage.Height);
@@ -108,42 +106,14 @@ namespace DKoFinal.Scenes
                     movingSawBounds.Add(newSawsBounds);
                 }
             }
+
             spikeHeadCollision = new ObstacleCollision(dkoFinal, player, spikeHeads);
             this.Components.Add(spikeHeadCollision);
-
-
             movingSawCollision = new ObstacleCollision(dkoFinal, player, movingSaws);
             this.Components.Add(movingSawCollision);
 
-            /*
-            List<Rectangle> movingSawBounds = new List<Rectangle>();
-            for (int k = 1; k <= stages; k++)
-            {
-                for (int i = 0; i < obstacleCount; i++)
-                {
-                    Rectangle newObstacleBounds = new Rectangle(random.Next(backgroundWidth * k, backgroundWidth * (k + 1)), random.Next(0, backgroundHeight - MovingSawImage.Height), MovingSawImage.Width, MovingSawImage.Height);
-
-                    while (ObstacleOverlaps(newObstacleBounds, movingSawBounds))
-                    {
-                        newObstacleBounds.X = random.Next(backgroundWidth * k, backgroundWidth * (k + 1));
-                        newObstacleBounds.Y = random.Next(0, backgroundHeight - MovingSawImage.Height);
-                    }
-
-                    Vector2 randomPosition = new Vector2(newObstacleBounds.X, newObstacleBounds.Y);
-                    Vector2 randomSpeed = new Vector2(random.Next(3, 5), random.Next(3, 5));
-
-                    movingSaw = new ObstacleAnimation(dkoFinal, spriteBatch, MovingSawImage, randomPosition, randomSpeed, 8, backgroundWidth, backgroundHeight);
-                    movingSaws.Add(movingSaw);
-                    this.Components.Add(movingSaw);
-
-                    movingSawBounds.Add(newObstacleBounds);
-                }
-            }
-            */
-
-
             /*============ Add terrain component & terrain collision manager ============*/
-            terrain = new Terrain(dkoFinal, spriteBatch, horizontalTexture, new Vector2(0, -horizontalTexture.Height), new Vector2(0, backgroundHeight + horizontalTexture.Height), new Vector2(horizontalTexture.Width, -horizontalTexture.Height), new Vector2(horizontalTexture.Width, backgroundHeight + horizontalTexture.Height), verticalTexture, new Vector2(-verticalTexture.Width, 0), new Vector2(backgroundWidth * (stages + 1) + backgroundWidth / 2, 0));
+            terrain = new Terrain(dkoFinal, spriteBatch, horizontalTexture, new Vector2(0, 0), new Vector2(0, backgroundHeight - horizontalTexture.Height), new Vector2(horizontalTexture.Width,0), new Vector2(horizontalTexture.Width, backgroundHeight - horizontalTexture.Height), verticalTexture, new Vector2(-verticalTexture.Width, 0), new Vector2(backgroundWidth * (stages + 1) + backgroundWidth / 2, 0));
             this.Components.Add(terrain);
 
             terrainCollision = new TerrainCollision(dkoFinal, player, terrain);

@@ -22,7 +22,7 @@ namespace DKoFinal.Scenes
             spriteBatch = dkoFinal.spriteBatch;
             spriteFont = dkoFinal.Content.Load<SpriteFont>("Fonts/regular");
 
-            aboutImage = dkoFinal.Content.Load<Texture2D>("HelpScene/help");
+            //aboutImage = dkoFinal.Content.Load<Texture2D>("HelpScene/help");
         }
 
         public override void Draw(GameTime gameTime)
