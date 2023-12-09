@@ -29,7 +29,7 @@ namespace DKoFinal.Renderers
         int delay = 50;
         float counter = 0;
 
-        Texture2D ex;
+        Vector2 speed = new Vector2(3, 0);
 
         public CheckpointAnimation(Game game, SpriteBatch spriteBatch, Vector2 position) : base(game)
         {
@@ -61,6 +61,8 @@ namespace DKoFinal.Renderers
 
         public override void Update(GameTime gameTime)
         {
+            position -= speed;
+
             counter += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (counter > delay)
             {

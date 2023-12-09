@@ -29,7 +29,7 @@ namespace DKoFinal.Renderers
         int delay = 200;
         float counter = 0;
 
-        private Vector2 speed;
+        Vector2 speed;
 
         public ObstacleAnimation(Game game, SpriteBatch spriteBatch, Texture2D obstacleTexture, Vector2 position, Vector2 speed, int textureColumn) : base(game)
         {

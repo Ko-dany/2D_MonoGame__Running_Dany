@@ -9,43 +9,29 @@ using System.Threading.Tasks;
 
 namespace DKoFinal.GameManager
 {
-    public class GroundCollision : GameComponent
+    public class TerrainCollision : GameComponent
     {
         PlayerCharacter player;
-        Ground ground;
+        Terrain terrain;
 
         bool collided = false;
 
-        public GroundCollision(Game game, PlayerCharacter player, Ground ground) : base(game)
+        public TerrainCollision(Game game, PlayerCharacter player, Terrain terrain) : base(game)
         {
             this.player = player;
-            this.ground = ground;
+            this.terrain = terrain;
         }
 
         public override void Update(GameTime gameTime)
         {
             Rectangle playerRec = player.GetBounds();
-            Rectangle groundRec = ground.GetBottomBound();
+            List<Rectangle> terrainRecs = terrain.GetAllBounds();
 
-            if (playerRec.Intersects(groundRec))
+            foreach(Rectangle terrainRec in terrainRecs)
             {
-                collided = true;
-                Debug.WriteLine("Player should die!");
-            }
-            else
-            {
-                collided = false;
-            }
-
-            /*
-            List<Rectangle> groundRectangles = ground.GetBounds();
-
-            foreach(Rectangle groundRec in groundRectangles)
-            {
-                if (playerRectangles.Intersects(groundRec))
+                if (playerRec.Intersects(terrainRec))
                 {
                     collided = true;
-                    Debug.WriteLine("Player should die!");
                     break;
                 }
                 else
@@ -53,7 +39,6 @@ namespace DKoFinal.GameManager
                     collided = false;
                 }
             }
-            */
             base.Update(gameTime);
         }
 

@@ -23,6 +23,7 @@ namespace DKoFinal
         HelpScene helpScene;
         AboutScene aboutScene;
         GameLevel1 gameLevel1;
+        GameLevel2 gameLevel2;
         MenuDuringGameScene menuDuringGame;
         GameResultScene gameResult;
 
@@ -40,6 +41,9 @@ namespace DKoFinal
 
         private Song mainBackgroundMusic;
         bool mainBackgroundMusicPlaying;
+
+        private Song gameBackgroundMusic;
+        bool gameBackgroundMusicPlaying;
 
         public DkoFinal()
         {
@@ -74,6 +78,7 @@ namespace DKoFinal
             scoreFont = Content.Load<SpriteFont>("Fonts/regular");
 
             mainBackgroundMusic = Content.Load<Song>("Sounds/Lobby_Background");
+            gameBackgroundMusic = Content.Load<Song>("Sounds/Game_Background");
 
             mainScene = new MainScene(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             this.Components.Add(mainScene);
@@ -87,6 +92,9 @@ namespace DKoFinal
 
             gameLevel1 = new GameLevel1(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             this.Components.Add(gameLevel1);
+
+            gameLevel2 = new GameLevel2(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+            this.Components.Add(gameLevel2);
 
             menuDuringGame = new MenuDuringGameScene(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             this.Components.Add(menuDuringGame);
@@ -112,6 +120,12 @@ namespace DKoFinal
                     switch (selectedScene)
                     {
                         case 0:
+                            if (!gameBackgroundMusicPlaying)
+                            {
+                                PlayBackgroundMusic(gameBackgroundMusic);
+                                mainBackgroundMusicPlaying = false;
+                                gameBackgroundMusicPlaying = true;
+                            }
                             gameLevel1.Display();
                             gameStarted = true;
                             break;
@@ -158,39 +172,14 @@ namespace DKoFinal
                 if (ks.IsKeyDown(Keys.Escape))
                 {
                     HideAllScenes();
-                    gamePaused = true;
                     menuDuringGame.Display();
+                    gamePaused = true;
                 }
 
                 if (gameLevel1.CheckGameOver())
                 {
                     HideAllScenes();
-                    gameEnded = true;
-                     
-                    /* ==== 게임 시간 표기 테스트 (시간/분/초)
-                    double totalSeconds = gamePlayedTime.TotalSeconds;
-                    if (totalSeconds > 3600)
-                    {
-                        int hours = (int)(totalSeconds / 3600);
-                        int minutes = (int)((totalSeconds % 3600) / 60);
-                        int seconds = (int)(totalSeconds % 60);
-
-                        gameTimeResult = $"GAME OVER!\n" +
-                            $"You took <{hours} hours, {minutes} minutes, {seconds} seconds> to finish the game.";
-                    }
-                    else if(totalSeconds > 60)
-                    {
-                        int minutes = (int)((totalSeconds % 3600) / 60);
-                        int seconds = (int)(totalSeconds % 60);
-
-                        gameTimeResult = $"GAME OVER!\n" +
-                            $"You took <{minutes} minutes, {seconds} seconds> to finish the game.";
-                    }
-                    else
-                    {
-                        gameTimeResult = $"GAME OVER! You took <{totalSeconds} seconds> to finish the game.";
-                    }
-                    */
+                    gameEnded = true;          
 
                     gameResult = new GameResultScene(this, GetGameResultMessage(), graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
                     this.Components.Add(gameResult);
@@ -199,7 +188,34 @@ namespace DKoFinal
 
                 if (gameLevel1.CheckGameClear())
                 {
-                    // Level2 starts
+                    HideAllScenes();
+                    gameLevel2.Display();
+                }
+            }
+
+            if (gameLevel2.Visible)
+            {
+                if (ks.IsKeyDown(Keys.Escape))
+                {
+                    HideAllScenes();
+                    menuDuringGame.Display();
+                    gamePaused = true;
+                }
+
+                if (gameLevel2.CheckGameOver())
+                {
+                    HideAllScenes();
+                    gameEnded = true;
+
+                    gameResult = new GameResultScene(this, GetGameResultMessage(), graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+                    this.Components.Add(gameResult);
+                    gameResult.Display();
+                }
+
+                if (gameLevel2.CheckGameClear())
+                {
+                    HideAllScenes();
+                    //gameLevel2.Display();
                 }
             }
 
@@ -213,8 +229,9 @@ namespace DKoFinal
                     switch (selectedScene)
                     {
                         case 0:
-                            gameLevel1.Display();
                             gamePaused = false;
+                            if (gameLevel1.CheckGameClear()) { gameLevel2.Display(); }
+                            else { gameLevel1.Display(); }
                             break;
                         case 1:
                             helpScene.Display();
