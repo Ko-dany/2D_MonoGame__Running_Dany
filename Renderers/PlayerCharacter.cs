@@ -18,6 +18,7 @@ namespace DKoFinal.Renderers
         SpriteBatch spriteBatch;
         Texture2D playerFall;
         Texture2D playerDoubleJump;
+        Texture2D playerIdle;
 
         Vector2 position;
         Color color;
@@ -28,6 +29,7 @@ namespace DKoFinal.Renderers
         float layerDepth;
 
         List<Rectangle> doubleJumpRectangles;
+        List<Rectangle> idleRectangles;
 
         const float speed = 5.0f;
         const float jumpForce = 5.0f;
@@ -38,6 +40,9 @@ namespace DKoFinal.Renderers
         bool isJumping = false;
         SoundEffect playerJumpSound;
 
+        int currentIdle = 0;
+        bool isIdle = false;
+
         int delay = 30;
         float counter = 0;
 
@@ -46,7 +51,10 @@ namespace DKoFinal.Renderers
             DkoFinal dkoFinal = (DkoFinal)game;
             playerFall = dkoFinal.Content.Load<Texture2D>("Level1/Fall");
             playerDoubleJump = dkoFinal.Content.Load<Texture2D>("Level1/DoubleJump");
+            playerIdle = dkoFinal.Content.Load<Texture2D>("Level1/Run");
+
             playerJumpSound = dkoFinal.Content.Load<SoundEffect>("Sounds/Jump");
+
 
             this.spriteBatch = spriteBatch;
             position = new Vector2(backgroundWidth/2, backgroundHeight/2);
@@ -65,6 +73,13 @@ namespace DKoFinal.Renderers
             {
                 Rectangle rectangle = new Rectangle(i * playerDoubleJump.Width / doubleJump_COL, 0, playerDoubleJump.Width / doubleJump_COL, playerDoubleJump.Height);
                 doubleJumpRectangles.Add(rectangle);
+            }
+
+            idleRectangles = new List<Rectangle>();
+            for (int i = 0; i < doubleJump_COL; i++)
+            {
+                Rectangle rectangle = new Rectangle(i * playerDoubleJump.Width / doubleJump_COL, 0, playerDoubleJump.Width / doubleJump_COL, playerDoubleJump.Height);
+                idleRectangles.Add(rectangle);
             }
         }
 
@@ -90,8 +105,21 @@ namespace DKoFinal.Renderers
                 spriteEffects = SpriteEffects.None;
             }
 
-            velocityY += gravity;
-            position.Y += velocityY;
+            if (ks.IsKeyDown(Keys.LeftControl) && !isIdle && !isJumping)
+            {
+                isIdle = true;
+            }
+
+            if (ks.IsKeyUp(Keys.LeftControl))
+            {
+                isIdle = false;
+            }
+
+            if (!ks.IsKeyDown(Keys.LeftControl))
+            {
+                velocityY += gravity;
+                position.Y += velocityY;
+            }
 
             if (velocityY > 0)
             {
@@ -117,6 +145,14 @@ namespace DKoFinal.Renderers
                         currentDoubleJump = 0;
                     }
                 }
+                if (isIdle)
+                {
+                    currentIdle += 1;
+                    if (currentIdle == idleRectangles.Count)
+                    {
+                        currentIdle = 0;
+                    }
+                }
             }
 
             base.Update(gameTime);
@@ -126,10 +162,13 @@ namespace DKoFinal.Renderers
         {
             spriteBatch.Begin();
 
-            if (!isJumping)
+            if (isIdle)
             {
-                spriteBatch.Draw(playerFall, position, new Rectangle(0,0, playerFall.Width, playerFall.Height), color, rotation, origin, scale, spriteEffects, layerDepth);
-
+                spriteBatch.Draw(playerIdle, position, idleRectangles[currentIdle], color, rotation, origin, scale, spriteEffects, layerDepth);
+            }
+            else if (!isJumping)
+            {
+                spriteBatch.Draw(playerFall, position, new Rectangle(0, 0, playerFall.Width, playerFall.Height), color, rotation, origin, scale, spriteEffects, layerDepth);
             }
             else
             {

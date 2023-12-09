@@ -61,7 +61,9 @@ namespace DKoFinal.Renderers
 
         public override void Update(GameTime gameTime)
         {
-            position -= speed;
+            if(speed.Y == 0) { position -= speed; }
+
+            if(speed.X == 0) { return;  }
 
             counter += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (counter > delay)
