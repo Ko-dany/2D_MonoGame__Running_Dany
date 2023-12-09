@@ -53,30 +53,42 @@ namespace DKoFinal.Scenes
             const int stages = 5;
             const int obstacleCount = 5;
 
-            List<ObstacleAnimation> obstacles = new List<ObstacleAnimation>(); 
-            for(int k = 1; k <= stages; k++)
+            List<ObstacleAnimation> obstacles = new List<ObstacleAnimation>();
+            List<Rectangle> obstacleBounds = new List<Rectangle>();
+            for (int k = 1; k <= stages; k++)
             {
                 for (int i = 0; i < obstacleCount; i++)
                 {
-                    Vector2 randomPosition = new Vector2(random.Next(backgroundWidth*k, backgroundWidth*(k+1)), random.Next(0, backgroundHeight-obstacleImage.Height));
+                    Rectangle newObstacleBounds = new Rectangle(random.Next(backgroundWidth * k, backgroundWidth * (k + 1)), random.Next(0, backgroundHeight -obstacleImage.Height), obstacleImage.Width,obstacleImage.Height);
+
+                    while (ObstacleOverlaps(newObstacleBounds, obstacleBounds))
+                    {
+                        newObstacleBounds.X = random.Next(backgroundWidth * k, backgroundWidth * (k + 1));
+                        newObstacleBounds.Y = random.Next(0, backgroundHeight - obstacleImage.Height);
+                    }
+
+                    Vector2 randomPosition = new Vector2(newObstacleBounds.X, newObstacleBounds.Y);
                     Vector2 randomSpeed = new Vector2(random.Next(3, 5), 0);
 
                     obstacle = new ObstacleAnimation(dkoFinal, spriteBatch, obstacleImage, randomPosition, randomSpeed, 4);
                     obstacles.Add(obstacle);
                     this.Components.Add(obstacle);
+
+                    obstacleBounds.Add(newObstacleBounds);
                 }
             }
             obstacleCollision = new ObstacleAnimationCollision(dkoFinal, player, obstacles);
             this.Components.Add(obstacleCollision);
 
             /*============ Add terrain component & terrain collision manager ============*/
-            terrain = new Terrain(dkoFinal, spriteBatch, horizontalTexture, new Vector2(0, -horizontalTexture.Height), new Vector2(0, backgroundHeight + horizontalTexture.Height), new Vector2(horizontalTexture.Width, -horizontalTexture.Height), new Vector2(horizontalTexture.Width, backgroundHeight + horizontalTexture.Height), verticalTexture, new Vector2(0,0), new Vector2(backgroundWidth-verticalTexture.Width, 0));
+            terrain = new Terrain(dkoFinal, spriteBatch, horizontalTexture, new Vector2(0, -horizontalTexture.Height), new Vector2(0, backgroundHeight + horizontalTexture.Height), new Vector2(horizontalTexture.Width, -horizontalTexture.Height), new Vector2(horizontalTexture.Width, backgroundHeight + horizontalTexture.Height), verticalTexture, new Vector2(-verticalTexture.Width,0), new Vector2(backgroundWidth * (stages + 1) + backgroundWidth / 2, 0));
             this.Components.Add(terrain);
+
             terrainCollision = new TerrainCollision(dkoFinal, player, terrain);
             this.Components.Add(terrainCollision);
 
             /*============ Add checkpoint component & checkpoint collision manager ============*/
-            checkpoint = new CheckpointAnimation(dkoFinal, spriteBatch, new Vector2(backgroundWidth * stages, backgroundHeight / 2));
+            checkpoint = new CheckpointAnimation(dkoFinal, spriteBatch, new Vector2(backgroundWidth * (stages+1) + backgroundWidth / 3, backgroundHeight / 2));
             this.Components.Add(checkpoint);
             checkpointCollision = new CheckpointAnimationCollision(dkoFinal, player, checkpoint);
             this.Components.Add(checkpointCollision);
@@ -107,6 +119,18 @@ namespace DKoFinal.Scenes
         public bool CheckGameClear()
         {
             return gameClear;
+        }
+
+        bool ObstacleOverlaps(Rectangle newObstacle, List<Rectangle> existingObstacles)
+        {
+            foreach (var obstacle in existingObstacles)
+            {
+                if (obstacle.Intersects(newObstacle))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

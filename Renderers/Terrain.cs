@@ -62,6 +62,8 @@ namespace DKoFinal.Renderers
             bottomPosition2 -= speed;
             topPosition2 -= speed;
 
+            endLinePosition -= speed;
+
             if (bottomPosition1.X + horizontalTexture.Width < 0)
             {
                 bottomPosition1.X = topPosition2.X + horizontalTexture.Width;

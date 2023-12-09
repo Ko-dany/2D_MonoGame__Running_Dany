@@ -111,6 +111,7 @@ namespace DKoFinal
                 {
                     PlayBackgroundMusic(mainBackgroundMusic);
                     mainBackgroundMusicPlaying = true;
+                    gameBackgroundMusicPlaying = false;
                 }
 
                 if (ks.IsKeyDown(Keys.Enter) && oldState.IsKeyUp(Keys.Enter))
