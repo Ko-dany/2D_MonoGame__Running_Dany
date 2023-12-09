@@ -14,7 +14,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.Taskbar;
 
 namespace DKoFinal.Scenes
 {
-    public class GameLevel2 : GameScene
+    public class GameLevel3 : GameScene
     {
         SpriteBatch spriteBatch;
 
@@ -29,16 +29,15 @@ namespace DKoFinal.Scenes
         bool gameOver = false;
         bool gameClear = false;
 
-        public GameLevel2(Game game, int backgroundWidth, int backgroundHeight) : base(game)
+        public GameLevel3(Game game, int backgroundWidth, int backgroundHeight) : base(game)
         {
             DkoFinal dkoFinal = (DkoFinal)game;
-            Texture2D mainBackgroundImg = dkoFinal.Content.Load<Texture2D>("Level1/Green");
+            Texture2D mainBackgroundImg = dkoFinal.Content.Load<Texture2D>("Level1/Purple");
             Texture2D spikeHeadImage = dkoFinal.Content.Load<Texture2D>("Level1/SpikeHead");
             Texture2D MovingSawImage = dkoFinal.Content.Load<Texture2D>("Level1/MovingSaw");
 
             Texture2D horizontalTexture = dkoFinal.Content.Load<Texture2D>("Level1/Spikes");
             Texture2D verticalTexture = dkoFinal.Content.Load<Texture2D>("Level1/Spikes_Vertical");
-
 
             spriteBatch = dkoFinal.spriteBatch;
 
@@ -54,7 +53,7 @@ namespace DKoFinal.Scenes
             Random random = new Random();
             const int stages = 5;
             const int spikeHeadsCount = 4;
-            const int movingSawsCount = 4;
+            const int movingSawsCount = 5;
 
             /*============ Generate random obstacle 1 components & add obstacle 1 collision manager ============*/
             List<Obstacle> spikeHeads = new List<Obstacle>();
