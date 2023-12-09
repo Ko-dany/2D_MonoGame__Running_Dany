@@ -87,6 +87,18 @@
 /processorParam:TextureFormat=Color
 /build:Level1/Green.png
 
+#begin Level1/movingSaw.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Level1/movingSaw.png;Level1/MovingSaw.png
+
 #begin Level1/Pink.png
 /importer:TextureImporter
 /processor:TextureProcessor

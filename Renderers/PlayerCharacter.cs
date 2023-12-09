@@ -62,7 +62,7 @@ namespace DKoFinal.Renderers
             color = Color.White;
             rotation = 0.0f;
             origin = new Vector2(0, 0);
-            scale = 2f;
+            scale = 1.8f;
             spriteEffects = SpriteEffects.None;
             layerDepth = 0.0f;
 

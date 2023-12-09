@@ -51,7 +51,7 @@ namespace DKoFinal.Scenes
             /*============ Generate random obstacle components & add obstacle collision manager ============*/
             Random random = new Random();
             const int stages = 5;
-            const int obstacleCount = 5;
+            const int obstacleCount = 3;
 
             List<ObstacleAnimation> obstacles = new List<ObstacleAnimation>();
             List<Rectangle> obstacleBounds = new List<Rectangle>();
@@ -70,7 +70,7 @@ namespace DKoFinal.Scenes
                     Vector2 randomPosition = new Vector2(newObstacleBounds.X, newObstacleBounds.Y);
                     Vector2 randomSpeed = new Vector2(random.Next(3, 5), 0);
 
-                    obstacle = new ObstacleAnimation(dkoFinal, spriteBatch, obstacleImage, randomPosition, randomSpeed, 4);
+                    obstacle = new ObstacleAnimation(dkoFinal, spriteBatch, obstacleImage, randomPosition, randomSpeed, 4, backgroundWidth, backgroundHeight);
                     obstacles.Add(obstacle);
                     this.Components.Add(obstacle);
 
@@ -97,7 +97,7 @@ namespace DKoFinal.Scenes
         public override void Update(GameTime gameTime)
         {
             // Whenever collision to obstacles or ground is detected, returns gameOver = true;
-            if(obstacleCollision.DetectCollision() || terrainCollision.DetectCollision()) { gameOver = true; }
+            if(terrainCollision.DetectCollision() || obstacleCollision.DetectCollision()) { gameOver = true; }
             if (checkpointCollision.DetectCollision()) { gameClear = true; }
 
             base.Update(gameTime);

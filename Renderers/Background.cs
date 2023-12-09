@@ -29,9 +29,9 @@ namespace DKoFinal.Renderers
         {
             spriteBatch.Begin();
 
-            for (int y = 0; y < backgroundHeight / mainBackgroundImg.Height; y++)
+            for (int y = 0; y <= backgroundHeight / mainBackgroundImg.Height; y++)
             {
-                for (int x = 0; x < backgroundWidth / mainBackgroundImg.Width; x++)
+                for (int x = 0; x <= backgroundWidth / mainBackgroundImg.Width; x++)
                 {
                     spriteBatch.Draw(mainBackgroundImg, new Vector2(x * mainBackgroundImg.Width, y * mainBackgroundImg.Height), Color.White);
                 }

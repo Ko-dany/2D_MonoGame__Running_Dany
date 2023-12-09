@@ -17,8 +17,8 @@ namespace DKoFinal.Scenes
     {
         SpriteBatch spriteBatch;
 
-        ObstacleAnimation obstacle;
-        ObstacleAnimationCollision obstacleCollision;
+        ObstacleAnimationCollision spikeHeadCollision;
+        ObstacleAnimationCollision movingSawCollision;
 
         CheckpointAnimation checkpoint;
         CheckpointAnimationCollision checkpointCollision;
@@ -33,7 +33,8 @@ namespace DKoFinal.Scenes
         {
             DkoFinal dkoFinal = (DkoFinal)game;
             Texture2D mainBackgroundImg = dkoFinal.Content.Load<Texture2D>("Level1/Green");
-            Texture2D obstacleImage = dkoFinal.Content.Load<Texture2D>("Level1/SpikeHead");
+            Texture2D spikeHeadImage = dkoFinal.Content.Load<Texture2D>("Level1/SpikeHead");
+            Texture2D MovingSawImage = dkoFinal.Content.Load<Texture2D>("Level1/MovingSaw");
 
             Texture2D horizontalTexture = dkoFinal.Content.Load<Texture2D>("Level1/Spikes");
             Texture2D verticalTexture = dkoFinal.Content.Load<Texture2D>("Level1/Spikes_Vertical");
@@ -49,37 +50,81 @@ namespace DKoFinal.Scenes
             PlayerCharacter player = new PlayerCharacter(dkoFinal, spriteBatch, backgroundWidth, backgroundHeight);
             this.Components.Add(player);
 
-            /*============ Generate random obstacle components & add obstacle collision manager ============*/
+            
             Random random = new Random();
             const int stages = 5;
             const int obstacleCount = 5;
 
-            List<ObstacleAnimation> obstacles = new List<ObstacleAnimation>();
-            List<Rectangle> obstacleBounds = new List<Rectangle>();
+            /*============ Generate random obstacle 1 components & add obstacle 1 collision manager ============*/
+            List<ObstacleAnimation> spikeHeads = new List<ObstacleAnimation>();
+            List<Rectangle> spikeHeadBounds = new List<Rectangle>();
             for (int k = 1; k <= stages; k++)
             {
                 for (int i = 0; i < obstacleCount; i++)
                 {
-                    Rectangle newObstacleBounds = new Rectangle(random.Next(backgroundWidth * k, backgroundWidth * (k + 1)), random.Next(0, backgroundHeight - obstacleImage.Height), obstacleImage.Width, obstacleImage.Height);
+                    Rectangle newObstacleBounds = new Rectangle(random.Next(backgroundWidth * k, backgroundWidth * (k + 1)), random.Next(0, backgroundHeight - spikeHeadImage.Height), spikeHeadImage.Width, spikeHeadImage.Height);
 
-                    while (ObstacleOverlaps(newObstacleBounds, obstacleBounds))
+                    while (ObstacleOverlaps(newObstacleBounds, spikeHeadBounds))
                     {
                         newObstacleBounds.X = random.Next(backgroundWidth * k, backgroundWidth * (k + 1));
-                        newObstacleBounds.Y = random.Next(0, backgroundHeight - obstacleImage.Height);
+                        newObstacleBounds.Y = random.Next(0, backgroundHeight - spikeHeadImage.Height);
                     }
 
                     Vector2 randomPosition = new Vector2(newObstacleBounds.X, newObstacleBounds.Y);
                     Vector2 randomSpeed = new Vector2(random.Next(3, 5), 0);
 
-                    obstacle = new ObstacleAnimation(dkoFinal, spriteBatch, obstacleImage, randomPosition, randomSpeed, 4);
-                    obstacles.Add(obstacle);
-                    this.Components.Add(obstacle);
+                    ObstacleAnimation spikeHead = new ObstacleAnimation(dkoFinal, spriteBatch, spikeHeadImage, randomPosition, randomSpeed, 4, backgroundWidth, backgroundHeight);
+                    spikeHeads.Add(spikeHead);
+                    this.Components.Add(spikeHead);
 
-                    obstacleBounds.Add(newObstacleBounds);
+                    spikeHeadBounds.Add(newObstacleBounds);
                 }
             }
-            obstacleCollision = new ObstacleAnimationCollision(dkoFinal, player, obstacles);
-            this.Components.Add(obstacleCollision);
+            spikeHeadCollision = new ObstacleAnimationCollision(dkoFinal, player, spikeHeads);
+            this.Components.Add(spikeHeadCollision);
+
+            /*============ Generate random obstacle 2 components & add obstacle 2 collision manager ============*/
+            List<ObstacleAnimation> movingSaws = new List<ObstacleAnimation>();
+            Vector2 randomSpeed2 = new Vector2(0, random.Next(3, 5));
+
+            ObstacleAnimation movingSaw1 = new ObstacleAnimation(dkoFinal, spriteBatch, MovingSawImage, new Vector2(100, 40), randomSpeed2, 8, backgroundWidth, backgroundHeight);
+            ObstacleAnimation movingSaw2 = new ObstacleAnimation(dkoFinal, spriteBatch, MovingSawImage, new Vector2(200, 50), randomSpeed2, 8, backgroundWidth, backgroundHeight);
+
+            movingSaws.Add(movingSaw1);
+            this.Components.Add(movingSaw1);
+            movingSaws.Add(movingSaw2);
+            this.Components.Add(movingSaw2);
+
+
+            movingSawCollision = new ObstacleAnimationCollision(dkoFinal, player, movingSaws);
+            this.Components.Add(movingSawCollision);
+
+            /*
+            List<Rectangle> movingSawBounds = new List<Rectangle>();
+            for (int k = 1; k <= stages; k++)
+            {
+                for (int i = 0; i < obstacleCount; i++)
+                {
+                    Rectangle newObstacleBounds = new Rectangle(random.Next(backgroundWidth * k, backgroundWidth * (k + 1)), random.Next(0, backgroundHeight - MovingSawImage.Height), MovingSawImage.Width, MovingSawImage.Height);
+
+                    while (ObstacleOverlaps(newObstacleBounds, movingSawBounds))
+                    {
+                        newObstacleBounds.X = random.Next(backgroundWidth * k, backgroundWidth * (k + 1));
+                        newObstacleBounds.Y = random.Next(0, backgroundHeight - MovingSawImage.Height);
+                    }
+
+                    Vector2 randomPosition = new Vector2(newObstacleBounds.X, newObstacleBounds.Y);
+                    Vector2 randomSpeed = new Vector2(random.Next(3, 5), random.Next(3, 5));
+
+                    movingSaw = new ObstacleAnimation(dkoFinal, spriteBatch, MovingSawImage, randomPosition, randomSpeed, 8, backgroundWidth, backgroundHeight);
+                    movingSaws.Add(movingSaw);
+                    this.Components.Add(movingSaw);
+
+                    movingSawBounds.Add(newObstacleBounds);
+                }
+            }
+            */
+
 
             /*============ Add terrain component & terrain collision manager ============*/
             terrain = new Terrain(dkoFinal, spriteBatch, horizontalTexture, new Vector2(0, -horizontalTexture.Height), new Vector2(0, backgroundHeight + horizontalTexture.Height), new Vector2(horizontalTexture.Width, -horizontalTexture.Height), new Vector2(horizontalTexture.Width, backgroundHeight + horizontalTexture.Height), verticalTexture, new Vector2(-verticalTexture.Width, 0), new Vector2(backgroundWidth * (stages + 1) + backgroundWidth / 2, 0));
@@ -98,7 +143,7 @@ namespace DKoFinal.Scenes
         public override void Update(GameTime gameTime)
         {
             // Whenever collision to obstacles or ground is detected, returns gameOver = true;
-            if(obstacleCollision.DetectCollision() || terrainCollision.DetectCollision()) { gameOver = true; }
+            if(terrainCollision.DetectCollision() || spikeHeadCollision.DetectCollision() || movingSawCollision.DetectCollision()) { gameOver = true; }
             if (checkpointCollision.DetectCollision()) { gameClear = true; }
 
             base.Update(gameTime);

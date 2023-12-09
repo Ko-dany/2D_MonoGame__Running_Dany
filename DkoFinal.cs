@@ -51,8 +51,8 @@ namespace DKoFinal
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
-            graphics.PreferredBackBufferWidth = 64 * 14;
-            graphics.PreferredBackBufferHeight = 64 * 8;
+            //graphics.PreferredBackBufferWidth = 64 * 14;
+            //graphics.PreferredBackBufferHeight = 64 * 8;
         }
 
         protected override void Initialize()
@@ -82,7 +82,7 @@ namespace DKoFinal
 
             mainScene = new MainScene(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             this.Components.Add(mainScene);
-            mainScene.Display();
+            //mainScene.Display();
 
             helpScene = new HelpScene(this);
             this.Components.Add(helpScene);
@@ -95,6 +95,7 @@ namespace DKoFinal
 
             gameLevel2 = new GameLevel2(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             this.Components.Add(gameLevel2);
+            gameLevel2.Display();
 
             menuDuringGame = new MenuDuringGameScene(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             this.Components.Add(menuDuringGame);

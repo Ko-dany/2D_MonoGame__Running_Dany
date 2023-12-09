@@ -23,6 +23,9 @@ namespace DKoFinal.Renderers
         SpriteEffects spriteEffects;
         float layerDepth;
 
+        int backgroundWidth;
+        int backgroundHeight;
+
         List<Rectangle> obstacleRectangles;
         int currentRectangleIndex = 0;
 
@@ -30,8 +33,9 @@ namespace DKoFinal.Renderers
         float counter = 0;
 
         Vector2 speed;
+        bool hitBottom = false;
 
-        public ObstacleAnimation(Game game, SpriteBatch spriteBatch, Texture2D obstacleTexture, Vector2 position, Vector2 speed, int textureColumn) : base(game)
+        public ObstacleAnimation(Game game, SpriteBatch spriteBatch, Texture2D obstacleTexture, Vector2 position, Vector2 speed, int textureColumn, int backgroundWidth, int backgroundHeight) : base(game)
         {
             this.textureColumn = textureColumn;
             this.spriteBatch = spriteBatch;
@@ -42,10 +46,13 @@ namespace DKoFinal.Renderers
             color = Color.White;
             rotation = 0.0f;
             origin = new Vector2(0,0);
-            scale = 2.0f;
+            scale = 1.8f;
             spriteEffects = SpriteEffects.None;
             layerDepth = 0.0f;
-             
+
+            this.backgroundWidth = backgroundWidth;
+            this.backgroundHeight = backgroundHeight;
+
             obstacleRectangles = new List<Rectangle>();
             for (int i = 0; i < textureColumn; i++)
             {
@@ -61,9 +68,18 @@ namespace DKoFinal.Renderers
 
         public override void Update(GameTime gameTime)
         {
-            if(speed.Y == 0) { position -= speed; }
+            position.X -= speed.X;
 
-            if(speed.X == 0) { return;  }
+            if (hitBottom)
+            {
+                position.Y -= speed.Y;
+                if(position.Y <= 0) { hitBottom = false; }
+            }
+            else
+            {
+                position.Y += speed.Y;
+                if (position.Y >= backgroundHeight - obstacleTexture.Height) { hitBottom = true; }
+            }
 
             counter += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (counter > delay)
