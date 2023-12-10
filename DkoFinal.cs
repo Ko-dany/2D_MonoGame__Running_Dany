@@ -1,4 +1,5 @@
-﻿using DKoFinal.Renderers;
+﻿using DKoFinal.Database;
+using DKoFinal.Renderers;
 using DKoFinal.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -7,6 +8,8 @@ using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Text;
 
 namespace DKoFinal
 {
@@ -25,6 +28,7 @@ namespace DKoFinal
         MenuDuringGameScene menuDuringGame;
         GameResultScene gameResult;
         GameCleared gameClearedScene;
+        LearderboardScene learderboard;
 
         /*======= Game states & scores =======*/
         bool isGameStarted;
@@ -36,11 +40,16 @@ namespace DKoFinal
         TimeSpan gamePlayedTime;
         KeyboardState oldState;
 
+        bool hasScores;
+
         /*======= Background Music =======*/
         private Song mainBackgroundMusic;
         bool mainBackgroundMusicPlaying;
         private Song gameBackgroundMusic;
         bool gameBackgroundMusicPlaying;
+
+        ScoreRecordManager scoreRecordManager;
+        List<ScoreRecord> scores;
 
         public DkoFinal()
         {
@@ -64,6 +73,7 @@ namespace DKoFinal
             mainBackgroundMusicPlaying = false;
 
             isGameCleared = false;
+            hasScores = false;
 
             base.Initialize();
         }
@@ -75,9 +85,20 @@ namespace DKoFinal
             mainBackgroundMusic = Content.Load<Song>("Sounds/Lobby_Background");
             gameBackgroundMusic = Content.Load<Song>("Sounds/Game_Background");
 
-            mainScene = new MainScene(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+            string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+            string filePath = "C:\\Users\\iamgo\\Desktop\\Conestoga\\Semester_3\\3. PROG2370_Game_Programming_with_Data_Structures\\Final Project\\DKoFinal\\game.txt";
+
+            if(File.Exists(filePath)) 
+            { 
+                hasScores = true;
+            }
+            scoreRecordManager = new ScoreRecordManager(filePath);
+            scores = scoreRecordManager.ReadScores();
+
+            mainScene = new MainScene(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, hasScores);
             this.Components.Add(mainScene);
-            //mainScene.Display();
+            mainScene.Display();
 
             helpScene = new HelpScene(this);
             this.Components.Add(helpScene);
@@ -93,7 +114,7 @@ namespace DKoFinal
 
             gameLevel3 = new GameLevel3(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             this.Components.Add(gameLevel3);
-            gameLevel3.Display();
+            //gameLevel3.Display();
 
             menuDuringGame = new MenuDuringGameScene(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             this.Components.Add(menuDuringGame);
@@ -113,34 +134,89 @@ namespace DKoFinal
                     gameBackgroundMusicPlaying = false;
                 }
 
+                /*
+                if (hasScores)
+                {
+                    // Extra score board
+                    string scoreMsg = ConvertToString(scores);
+                    Text leaderBoard = new Text(this, scoreMsg, spriteBatch, Content.Load<SpriteFont>("Fonts/regular"), new Vector2(20, 20));
+                    this.Components.Add(leaderBoard);
+                }
+                */
+
                 if (ks.IsKeyDown(Keys.Enter) && oldState.IsKeyUp(Keys.Enter))
                 {
                     int selectedScene = mainScene.GetSelectedIndex();
                     HideAllScenes();
-                    switch (selectedScene)
+                    if (!hasScores)
                     {
-                        case 0:
-                            if (!gameBackgroundMusicPlaying)
-                            {
-                                PlayBackgroundMusic(gameBackgroundMusic);
-                                mainBackgroundMusicPlaying = false;
-                                gameBackgroundMusicPlaying = true;
-                            }
-                            gameLevel1.Display();
-                            isGameStarted = true;
-                            break;
-                        case 1:
-                            helpScene.Display();
-                            break;
-                        case 2:
-                            aboutScene.Display();
-                            break;
-                        case 3:
-                            Exit();
-                            break;
-                        default:
-                            break;
+                        switch (selectedScene)
+                        {
+                            case 0:
+                                if (!gameBackgroundMusicPlaying)
+                                {
+                                    PlayBackgroundMusic(gameBackgroundMusic);
+                                    mainBackgroundMusicPlaying = false;
+                                    gameBackgroundMusicPlaying = true;
+                                }
+                                gameLevel1.Display();
+                                isGameStarted = true;
+                                break;
+                            case 1:
+                                helpScene.Display();
+                                break;
+                            case 2:
+                                aboutScene.Display();
+                                break;
+                            case 3:
+                                Exit();
+                                break;
+                            default:
+                                break;
+                        }
                     }
+                    else
+                    {
+                        switch (selectedScene)
+                        {
+                            case 0:
+                                if (!gameBackgroundMusicPlaying)
+                                {
+                                    PlayBackgroundMusic(gameBackgroundMusic);
+                                    mainBackgroundMusicPlaying = false;
+                                    gameBackgroundMusicPlaying = true;
+                                }
+                                gameLevel1.Display();
+                                isGameStarted = true;
+                                break;
+                            case 1:
+                                learderboard = new LearderboardScene(this, ConvertToString(scores), graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+                                this.Components.Add(learderboard);
+                                learderboard.Display();
+                                break;
+                            case 2:
+                                helpScene.Display();
+                                break;
+                            case 3:
+                                aboutScene.Display();
+                                break;
+                            case 4:
+                                Exit();
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    
+                }
+            }
+
+            if(learderboard != null && learderboard.Visible)
+            {
+                if (ks.IsKeyDown(Keys.Escape))
+                {
+                    HideAllScenes();
+                    mainScene.Display();
                 }
             }
 
@@ -312,27 +388,24 @@ namespace DKoFinal
             /* ================= Game Cleared Scene ================= */
             if (isGameCleared && gameClearedScene.Visible)
             {
-                /*
                 if (ks.IsKeyDown(Keys.Enter))
                 {
-                    int selectedScene = gameClearedScene.GetSelectedIndex();
                     HideAllScenes();
-                    switch (selectedScene)
+                    string playerName = gameClearedScene.GetPlayerName();
+
+                    if(playerName.Length > 0 && playerName.Length < 4)
                     {
-                        case 0:
-                            Initialize();
-                            break;
-                        case 1:
-                            aboutScene.Display();
-                            break;
-                        case 2:
-                            Exit();
-                            break;
-                        default:
-                            break;
+                        Debug.WriteLine("You are here!");
+
+                        ScoreRecord sr = new ScoreRecord(playerName, gameScore);
+                        scores.Add(sr);
+                        scoreRecordManager.WriteScores(scores);
+
+                        gameResult = new GameResultScene(this, "Thanks for playing!", graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+                        this.Components.Add(gameResult);
+                        gameResult.Display();
                     }
                 }
-                */
             }
 
             // Recording the elapsed time since the game started.
@@ -363,7 +436,7 @@ namespace DKoFinal
 
         public string GetGameResultMessage()
         {
-            string gameTimeResult = String.Empty;
+            string gameTimeResult;
 
             if (isGameCleared)
             {
@@ -382,6 +455,19 @@ namespace DKoFinal
             MediaPlayer.Stop();
             MediaPlayer.Play(backgroundMusic);
             MediaPlayer.IsRepeating = true;
+        }
+
+        public string ConvertToString(List<ScoreRecord> scores)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            int count = Math.Min(scores.Count, 5);
+            for (int i = 0; i < count; i++)
+            {
+                sb.AppendLine($"Player: {scores[i].Player} --- Score: {scores[i].Score}");
+            }
+
+            return sb.ToString();
         }
     }
 }

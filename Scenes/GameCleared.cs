@@ -99,5 +99,10 @@ namespace DKoFinal.Scenes
         {
             return menuSelection.selectedIndex;
         }
+
+        public string GetPlayerName()
+        {
+            return playerName.ToString();
+        }
     }
 }

@@ -21,7 +21,7 @@ namespace DKoFinal.Scenes
         MenuSelection menuSelection;
         Image menuTitle;
 
-        public MainScene(Game game, int backgroundWidth, int backgroundHeight) : base(game)
+        public MainScene(Game game, int backgroundWidth, int backgroundHeight, bool hadScores) : base(game)
         {
             DkoFinal dkoFinal = (DkoFinal)game;
             spriteBatch = dkoFinal.spriteBatch;
@@ -33,14 +33,21 @@ namespace DKoFinal.Scenes
             selected = dkoFinal.Content.Load<SpriteFont>("Fonts/selected");
 
             mainBackground = new Background(dkoFinal, spriteBatch, mainBackgroundImg, backgroundWidth, backgroundHeight);
+            this.Components.Add(mainBackground);
 
             menuTitle = new Image(dkoFinal, spriteBatch, mainTitleImg, new Vector2(backgroundWidth / 2, backgroundHeight / 3), new Rectangle(0, 0, mainTitleImg.Width, mainTitleImg.Height), Color.White, new Vector2(mainTitleImg.Width / 2, mainTitleImg.Height / 2), 0.0f, 0.3f, SpriteEffects.None, 0.0f);
-
-            menuSelection = new MenuSelection(dkoFinal, spriteBatch, regular, selected, new Vector2(backgroundWidth/2, backgroundHeight/5*3), Color.White, Color.Black, new string[] { "START", "HELP", "ABOUT", "EXIT" });
-
-            this.Components.Add(mainBackground);
             this.Components.Add(menuTitle);
+
+            if (!hadScores)
+            {
+                menuSelection = new MenuSelection(dkoFinal, spriteBatch, regular, selected, new Vector2(backgroundWidth / 2, backgroundHeight / 5 * 3), Color.White, Color.Black, new string[] { "START", "HELP", "ABOUT", "EXIT" });
+            }
+            else
+            {
+                menuSelection = new MenuSelection(dkoFinal, spriteBatch, regular, selected, new Vector2(backgroundWidth / 2, backgroundHeight / 5 * 3), Color.White, Color.Black, new string[] { "START", "LEADER BOARD","HELP", "ABOUT", "EXIT" });
+            }
             this.Components.Add(menuSelection);
+
         }
         public override void Draw(GameTime gameTime)
         {
