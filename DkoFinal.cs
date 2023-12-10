@@ -63,7 +63,7 @@ namespace DKoFinal
 
         protected override void Initialize()
         {
-            isGameStarted = false;
+            isGameStarted = true;
             isGamePaused = false;
             isGameEnded = false;
             gameScore = 0.00;
@@ -98,7 +98,7 @@ namespace DKoFinal
 
             mainScene = new MainScene(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, hasScores);
             this.Components.Add(mainScene);
-            mainScene.Display();
+            //mainScene.Display();
 
             helpScene = new HelpScene(this);
             this.Components.Add(helpScene);
@@ -114,7 +114,7 @@ namespace DKoFinal
 
             gameLevel3 = new GameLevel3(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             this.Components.Add(gameLevel3);
-            //gameLevel3.Display();
+            gameLevel3.Display();
 
             menuDuringGame = new MenuDuringGameScene(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             this.Components.Add(menuDuringGame);

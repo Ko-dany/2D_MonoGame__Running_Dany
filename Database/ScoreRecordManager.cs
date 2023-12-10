@@ -46,11 +46,10 @@ namespace DKoFinal.Database
                 }
             }
             catch (Exception ex)
+
             {
                 Console.WriteLine($"Error reading file: {ex.Message}");
             }
-
-            //scoreRecords.Sort((a, b) => b.Score.CompareTo(a.Score));
 
             return scoreRecords;
         }
@@ -59,7 +58,7 @@ namespace DKoFinal.Database
         {
             try
             {
-                List<ScoreRecord> topScores = scores.OrderByDescending(s => s.Score).Take(5).ToList();
+                List<ScoreRecord> topScores = scores.OrderBy(s => s.Score).Take(5).ToList();
 
                 using (FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.Write))
                 using (StreamWriter streamWriter = new StreamWriter(fileStream))
