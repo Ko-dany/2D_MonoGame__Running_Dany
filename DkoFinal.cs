@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
-using SharpDX.WIC;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -16,6 +15,7 @@ namespace DKoFinal
         public GraphicsDeviceManager graphics;
         public SpriteBatch spriteBatch;
 
+        /*======= Game scenes =======*/
         MainScene mainScene;
         HelpScene helpScene;
         AboutScene aboutScene;
@@ -26,21 +26,19 @@ namespace DKoFinal
         GameResultScene gameResult;
         GameCleared gameClearedScene;
 
-        List<GameScene> gameScenes;
-
-        bool gameStarted;
-        bool gamePaused;
-        bool gameEnded;
-        TimeSpan gamePlayedTime;
-        double gameScore;
-
-        KeyboardState oldState;
-
+        /*======= Game states & scores =======*/
+        bool isGameStarted;
+        bool isGamePaused;
+        bool isGameEnded;
         bool isGameCleared;
 
+        double gameScore;
+        TimeSpan gamePlayedTime;
+        KeyboardState oldState;
+
+        /*======= Background Music =======*/
         private Song mainBackgroundMusic;
         bool mainBackgroundMusicPlaying;
-
         private Song gameBackgroundMusic;
         bool gameBackgroundMusicPlaying;
 
@@ -56,9 +54,9 @@ namespace DKoFinal
 
         protected override void Initialize()
         {
-            gameStarted = false;
-            gamePaused = false;
-            gameEnded = false;
+            isGameStarted = false;
+            isGamePaused = false;
+            isGameEnded = false;
             gameScore = 0.00;
             gamePlayedTime = TimeSpan.Zero;
             oldState = Keyboard.GetState();
@@ -73,14 +71,13 @@ namespace DKoFinal
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            gameScenes = new List<GameScene>();
 
             mainBackgroundMusic = Content.Load<Song>("Sounds/Lobby_Background");
             gameBackgroundMusic = Content.Load<Song>("Sounds/Game_Background");
 
             mainScene = new MainScene(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             this.Components.Add(mainScene);
-            mainScene.Display();
+            //mainScene.Display();
 
             helpScene = new HelpScene(this);
             this.Components.Add(helpScene);
@@ -96,7 +93,7 @@ namespace DKoFinal
 
             gameLevel3 = new GameLevel3(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             this.Components.Add(gameLevel3);
-            //gameLevel3.Display();
+            gameLevel3.Display();
 
             menuDuringGame = new MenuDuringGameScene(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             this.Components.Add(menuDuringGame);
@@ -130,7 +127,7 @@ namespace DKoFinal
                                 gameBackgroundMusicPlaying = true;
                             }
                             gameLevel1.Display();
-                            gameStarted = true;
+                            isGameStarted = true;
                             break;
                         case 1:
                             helpScene.Display();
@@ -154,17 +151,22 @@ namespace DKoFinal
                 if (ks.IsKeyDown(Keys.Escape))
                 {
                     HideAllScenes();
-                    if (!gameStarted)
+
+                    if (isGameCleared)
                     {
-                        mainScene.Display();
+                        gameClearedScene.Display();
                     }
-                    else if (gameStarted && gamePaused)
+                    else if (isGameEnded)
+                    {
+                        gameResult.Display();
+                    }
+                    else if(isGameStarted && isGamePaused)
                     {
                         menuDuringGame.Display();
                     }
-                    else if (gameEnded)
+                    else if (!isGameStarted)
                     {
-                        gameResult.Display();
+                        mainScene.Display();
                     }
                 }
             }
@@ -176,13 +178,13 @@ namespace DKoFinal
                 {
                     HideAllScenes();
                     menuDuringGame.Display();
-                    gamePaused = true;
+                    isGamePaused = true;
                 }
 
                 if (gameLevel1.CheckGameOver())
                 {
                     HideAllScenes();
-                    gameEnded = true;          
+                    isGameEnded = true;          
 
                     gameResult = new GameResultScene(this, GetGameResultMessage(), graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
                     this.Components.Add(gameResult);
@@ -202,13 +204,13 @@ namespace DKoFinal
                 {
                     HideAllScenes();
                     menuDuringGame.Display();
-                    gamePaused = true;
+                    isGamePaused = true;
                 }
 
                 if (gameLevel2.CheckGameOver())
                 {
                     HideAllScenes();
-                    gameEnded = true;
+                    isGameEnded = true;
 
                     gameResult = new GameResultScene(this, GetGameResultMessage(), graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
                     this.Components.Add(gameResult);
@@ -228,13 +230,13 @@ namespace DKoFinal
                 {
                     HideAllScenes();
                     menuDuringGame.Display();
-                    gamePaused = true;
+                    isGamePaused = true;
                 }
 
                 if (gameLevel3.CheckGameOver())
                 {
                     HideAllScenes();
-                    gameEnded = true;
+                    isGameEnded = true;
 
                     gameResult = new GameResultScene(this, GetGameResultMessage(), graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
                     this.Components.Add(gameResult);
@@ -244,6 +246,7 @@ namespace DKoFinal
                 if (gameLevel3.CheckGameClear())
                 {
                     HideAllScenes();
+                    isGameEnded = true;
                     isGameCleared = true;
 
                     gameClearedScene = new GameCleared(this, GetGameResultMessage(), graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
@@ -262,7 +265,7 @@ namespace DKoFinal
                     switch (selectedScene)
                     {
                         case 0:
-                            gamePaused = false;
+                            isGamePaused = false;
                             if (gameLevel2.CheckGameClear()) { gameLevel3.Display(); }
                             else if (gameLevel1.CheckGameClear()) { gameLevel2.Display(); }
                             else { gameLevel1.Display(); }
@@ -309,6 +312,7 @@ namespace DKoFinal
             /* ================= Game Cleared Scene ================= */
             if (isGameCleared && gameClearedScene.Visible)
             {
+                /*
                 if (ks.IsKeyDown(Keys.Enter))
                 {
                     int selectedScene = gameClearedScene.GetSelectedIndex();
@@ -328,10 +332,11 @@ namespace DKoFinal
                             break;
                     }
                 }
+                */
             }
 
             // Recording the elapsed time since the game started.
-            if (gameStarted && !gamePaused && !gameEnded)
+            if (isGameStarted && !isGamePaused && !isGameEnded)
             { 
                 gamePlayedTime += gameTime.ElapsedGameTime;
                 gameScore = Math.Round(gamePlayedTime.TotalSeconds, 2);
@@ -362,7 +367,7 @@ namespace DKoFinal
 
             if (isGameCleared)
             {
-                gameTimeResult = "ALL LEVELS CLEARED\n" + $"Your score: {gameScore}\n" + "Thanks for playing!";
+                gameTimeResult = "ALL LEVELS CLEARED\n" + $"Your score: {gameScore}\n" + "Leave your player name to save the score.";
             }
             else
             {

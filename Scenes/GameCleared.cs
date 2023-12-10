@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 using DKoFinal.Renderers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using SharpDX.Direct2D1.Effects;
 using static System.ComponentModel.Design.ObjectSelectorEditor;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Taskbar;
 
 namespace DKoFinal.Scenes
 {
@@ -15,8 +17,8 @@ namespace DKoFinal.Scenes
     {
         SpriteBatch spriteBatch;
         SpriteFont regular, selected;
-        string gameResult;
-        Vector2 position;
+        int backgroundWidth;
+        int backgroundHeight;
 
         Texture2D resultBackgroundImg;
         Background resultBackground;
@@ -24,37 +26,73 @@ namespace DKoFinal.Scenes
         Text resultText;
         MenuSelection menuSelection;
 
+        Text playerNameText;
+
+        StringBuilder playerName = new StringBuilder();
+        const int MaxNameLength = 3;
+
+        KeyboardState oldState;
+
+
         public GameCleared(Game game, string gameResult, int backgroundWidth, int backgroundHeight) : base(game)
         {
-            this.gameResult = gameResult;
-
             DkoFinal dkoFinal = (DkoFinal)game;
             spriteBatch = dkoFinal.spriteBatch;
             selected = dkoFinal.Content.Load<SpriteFont>("Fonts/selected");
             regular = dkoFinal.Content.Load<SpriteFont>("Fonts/regular");
-            position = new Vector2(backgroundWidth/2, backgroundHeight/2);
-
             resultBackgroundImg = dkoFinal.Content.Load<Texture2D>("Level1/Pink");
+
+            Vector2 position = new Vector2(backgroundWidth / 2, backgroundHeight / 2);
+
+            this.backgroundWidth = backgroundWidth;
+            this.backgroundHeight = backgroundHeight;
+
             resultBackground = new Background(dkoFinal, spriteBatch, resultBackgroundImg, backgroundWidth, backgroundHeight);
             this.Components.Add(resultBackground);
 
-            menuSelection = new MenuSelection(dkoFinal, spriteBatch, regular, selected, new Vector2(backgroundWidth / 2, backgroundHeight / 5 * 3), Color.White, Color.Black, new string[] { "BACK TO MAIN", "ABOUT", "EXIT" });
-            this.Components.Add(menuSelection);
-
             resultText = new Text(dkoFinal, gameResult, spriteBatch, regular, new Vector2(backgroundWidth/2, backgroundHeight / 3));
             this.Components.Add(resultText);
+
+            playerNameText = new Text(dkoFinal, $"Player Name: {playerName}", spriteBatch, regular, position);
+            this.Components.Add(playerNameText);
+
+            oldState = Keyboard.GetState();
+
+            //menuSelection = new MenuSelection(dkoFinal, spriteBatch, regular, selected, new Vector2(backgroundWidth / 2, backgroundHeight / 5 * 3), Color.White, Color.Black, new string[] { "BACK TO MAIN", "ABOUT", "EXIT" });
+            //this.Components.Add(menuSelection);
         }
+
+        public override void Update(GameTime gameTime)
+        {
+            KeyboardState ks = Keyboard.GetState();
+
+            for (Keys key = Keys.A; key <= Keys.Z; key++)
+            {
+                if (ks.IsKeyDown(key) && !oldState.IsKeyDown(key))
+                {
+                    playerName.Append(key.ToString());
+                    playerName.Length = Math.Min(playerName.Length, MaxNameLength);
+                    playerNameText.gameResult = $"Player Name: {playerName}";
+                }
+            }
+
+            if (ks.IsKeyDown(Keys.Back) && playerName.Length > 0 && !oldState.IsKeyDown(Keys.Back))
+            {
+                playerName.Length--;
+                playerNameText.gameResult = $"Player Name: {playerName}";
+            }
+
+            oldState = ks;
+
+            base.Update(gameTime);
+        }
+
         public override void Draw(GameTime gameTime)
         {
             spriteBatch.Begin();
             spriteBatch.End();
 
             base.Draw(gameTime);
-        }
-
-        public void InputGameResult(string gameResult)
-        {
-            this.gameResult = gameResult;
         }
 
         public int GetSelectedIndex()

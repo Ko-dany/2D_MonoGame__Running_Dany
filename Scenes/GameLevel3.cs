@@ -120,7 +120,8 @@ namespace DKoFinal.Scenes
             this.Components.Add(terrainCollision);
 
             /*============ Add checkpoint component & checkpoint collision manager ============*/
-            checkpoint = new CheckpointAnimation(dkoFinal, spriteBatch, new Vector2(backgroundWidth * (stages + 1) + backgroundWidth / 3, backgroundHeight / 2));
+            //checkpoint = new CheckpointAnimation(dkoFinal, spriteBatch, new Vector2(backgroundWidth * (stages + 1) + backgroundWidth / 3, backgroundHeight / 2));
+            checkpoint = new CheckpointAnimation(dkoFinal, spriteBatch, new Vector2(backgroundWidth, backgroundHeight / 2));
             this.Components.Add(checkpoint);
             checkpointCollision = new CheckpointCollision(dkoFinal, player, checkpoint);
             this.Components.Add(checkpointCollision);
