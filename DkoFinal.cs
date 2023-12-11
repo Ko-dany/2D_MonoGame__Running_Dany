@@ -94,11 +94,11 @@ namespace DKoFinal
             mainBackgroundMusic = Content.Load<Song>("Sounds/Lobby_Background");
             gameBackgroundMusic = Content.Load<Song>("Sounds/Game_Background");
 
-            string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            string currentDir = Directory.GetCurrentDirectory();
+            string parentDir = Directory.GetParent(Directory.GetParent(Directory.GetParent(currentDir).FullName).FullName).FullName;
+            string filePath = Path.Combine(parentDir, "Game_Final_Scoreboard.txt");
 
-            string filePath = "C:\\Users\\iamgo\\Desktop\\Conestoga\\Semester_3\\3. PROG2370_Game_Programming_with_Data_Structures\\Final Project\\DKoFinal\\game.txt";
-
-            if(File.Exists(filePath)) 
+            if (File.Exists(filePath)) 
             { 
                 hasScores = true;
             }
