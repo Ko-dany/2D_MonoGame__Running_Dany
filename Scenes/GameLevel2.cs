@@ -54,8 +54,8 @@ namespace DKoFinal.Scenes
             /*============ Generate random obstacle components & obstacle collision managers ============*/
             Random random = new Random();
             const int stages = 5;
-            const int spikeHeadsCount = 4;
-            const int movingSawsCount = 4;
+            const int spikeHeadsCount = 3;
+            const int movingSawsCount = 3;
 
             List<Obstacle> spikeHeads = new List<Obstacle>();
             List<Rectangle> spikeHeadBounds = new List<Rectangle>();

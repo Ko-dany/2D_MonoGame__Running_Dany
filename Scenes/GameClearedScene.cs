@@ -33,7 +33,7 @@ namespace DKoFinal.Scenes
             Texture2D resultBackgroundImg = dkoFinal.Content.Load<Texture2D>("Level1/Pink");
 
             playerName = new StringBuilder();
-            Vector2 position = new Vector2(backgroundWidth / 2, backgroundHeight / 2);
+            Vector2 position = new Vector2(backgroundWidth / 2, backgroundHeight / 3*2);
             oldState = Keyboard.GetState();
 
             /*============ Add background component ============*/

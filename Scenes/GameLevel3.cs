@@ -52,8 +52,8 @@ namespace DKoFinal.Scenes
             /*============ Generate random obstacle components & add obstacle collision manager ============*/
             Random random = new Random();
             const int stages = 5;
-            const int spikeHeadsCount = 4;
-            const int movingSawsCount = 5;
+            const int spikeHeadsCount = 3;
+            const int movingSawsCount = 3;
 
             List<Obstacle> spikeHeads = new List<Obstacle>();
             List<Rectangle> spikeHeadBounds = new List<Rectangle>();
@@ -118,7 +118,6 @@ namespace DKoFinal.Scenes
             this.Components.Add(terrainCollision);
 
             /*============ Add checkpoint component & checkpoint collision manager ============*/
-            //checkpoint = new CheckpointAnimation(dkoFinal, spriteBatch, new Vector2(backgroundWidth * (stages + 1) + backgroundWidth / 3, backgroundHeight / 2));
             CheckpointAnimation checkpoint = new CheckpointAnimation(dkoFinal, spriteBatch, new Vector2(backgroundWidth * (stages + 1) + backgroundWidth / 3, backgroundHeight / 2));
             this.Components.Add(checkpoint);
             checkpointCollision = new CheckpointCollision(dkoFinal, player, checkpoint);

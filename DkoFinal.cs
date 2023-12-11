@@ -24,7 +24,6 @@ namespace DKoFinal
     {
 
         /* <<<<<<<<<<<<<<< Variables >>>>>>>>>>>>>>> */
-
         public GraphicsDeviceManager graphics;
         public SpriteBatch spriteBatch;
 
@@ -100,7 +99,10 @@ namespace DKoFinal
 
             if (File.Exists(filePath)) 
             { 
-                hasScores = true;
+                if(new FileInfo(filePath).Length > 0)
+                {
+                    hasScores = true;
+                }
             }
             scoreRecordManager = new ScoreRecordManager(filePath);
             scores = scoreRecordManager.ReadScores();
@@ -125,6 +127,7 @@ namespace DKoFinal
 
             gameLevel3 = new GameLevel3(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             this.Components.Add(gameLevel3);
+            //gameLevel3.Display();
 
             menuDuringGame = new MenuDuringGameScene(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             this.Components.Add(menuDuringGame);
@@ -387,25 +390,23 @@ namespace DKoFinal
             }
 
             /* ================= Game Cleared Scene ================= */
+
             if (isGameCleared && gameClearedScene.Visible)
             {
-                if (ks.IsKeyDown(Keys.Enter))
+                MouseState ms = Mouse.GetState();
+                string playerName = gameClearedScene.GetPlayerName();
+
+                if (ms.LeftButton == ButtonState.Pressed && (playerName.Length > 0 && playerName.Length < 4))
                 {
                     HideAllScenes();
-                    string playerName = gameClearedScene.GetPlayerName();
 
-                    if(playerName.Length > 0 && playerName.Length < 4)
-                    {
-                        Debug.WriteLine("You are here!");
+                    ScoreRecord sr = new ScoreRecord(playerName, gameScore);
+                    scores.Add(sr);
+                    scoreRecordManager.WriteScores(scores);
 
-                        ScoreRecord sr = new ScoreRecord(playerName, gameScore);
-                        scores.Add(sr);
-                        scoreRecordManager.WriteScores(scores);
-
-                        gameResult = new GameResultScene(this, "Thanks for playing!", graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
-                        this.Components.Add(gameResult);
-                        gameResult.Display();
-                    }
+                    gameResult = new GameResultScene(this, "Thanks for playing!", graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+                    this.Components.Add(gameResult);
+                    gameResult.Display();
                 }
             }
 
@@ -444,7 +445,7 @@ namespace DKoFinal
 
             if (isGameCleared)
             {
-                gameTimeResult = "ALL LEVELS CLEARED\n" + $"Your score: {gameScore}\n" + "Leave your player name to save the score.";
+                gameTimeResult = "ALL LEVELS CLEARED\n" + $"Your score: {gameScore}\n\n" + "Leave you initials (3 letters) to save then mouse click!";
             }
             else
             {

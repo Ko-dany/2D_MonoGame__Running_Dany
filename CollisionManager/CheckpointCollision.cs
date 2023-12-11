@@ -35,7 +35,6 @@ namespace DKoFinal.GameManager
             {
                 collided = true;
                 gameClearSound.Play();
-                Debug.WriteLine("Gotta go to the next level :3");
             }
             else
             {

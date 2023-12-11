@@ -40,8 +40,6 @@ namespace DKoFinal.Database
                             double score;
                             if (double.TryParse(fields[1], out score))
                             {
-                                
-
                                 scoreRecords.Add(new ScoreRecord(player, score));
                             }
                         }
