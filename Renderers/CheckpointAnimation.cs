@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace DKoFinal.Renderers
 {
+
     public class CheckpointAnimation : DrawableGameComponent
     {
         const int textureColumn = 10;

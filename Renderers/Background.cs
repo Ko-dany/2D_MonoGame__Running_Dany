@@ -10,8 +10,6 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.Taskbar;
 
 namespace DKoFinal.Renderers
 {
-
-    
     public class Background : DrawableGameComponent
     {
         SpriteBatch spriteBatch;
@@ -27,6 +25,7 @@ namespace DKoFinal.Renderers
             this.backgroundHeight = backgroundHeight;
         }
 
+        /* ============= Check the screen width/height and draw background tiles based on the screen size ============= */
         public override void Draw(GameTime gameTime)
         {
             spriteBatch.Begin();

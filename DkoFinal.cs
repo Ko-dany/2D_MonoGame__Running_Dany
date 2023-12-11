@@ -22,6 +22,9 @@ namespace DKoFinal
 {
     public class DkoFinal : Game
     {
+
+        /* <<<<<<<<<<<<<<< Variables >>>>>>>>>>>>>>> */
+
         public GraphicsDeviceManager graphics;
         public SpriteBatch spriteBatch;
 
@@ -55,6 +58,7 @@ namespace DKoFinal
         private Song gameBackgroundMusic;
         bool gameBackgroundMusicPlaying;
 
+        /*======= Score management =======*/
         ScoreRecordManager scoreRecordManager;
         List<ScoreRecord> scores;
 
@@ -63,9 +67,6 @@ namespace DKoFinal
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-
-            //graphics.PreferredBackBufferWidth = 64 * 14;
-            //graphics.PreferredBackBufferHeight = 64 * 8;
         }
 
         protected override void Initialize()
@@ -75,6 +76,7 @@ namespace DKoFinal
             isGameEnded = false;
             gameScore = 0.00;
             gamePlayedTime = TimeSpan.Zero;
+
             oldState = Keyboard.GetState();
 
             mainBackgroundMusicPlaying = false;
@@ -103,6 +105,8 @@ namespace DKoFinal
             scoreRecordManager = new ScoreRecordManager(filePath);
             scores = scoreRecordManager.ReadScores();
 
+
+            /*======= Get scenes prepared =======*/
             mainScene = new MainScene(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, hasScores);
             this.Components.Add(mainScene);
             mainScene.Display();
@@ -121,7 +125,6 @@ namespace DKoFinal
 
             gameLevel3 = new GameLevel3(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             this.Components.Add(gameLevel3);
-            //gameLevel3.Display();
 
             menuDuringGame = new MenuDuringGameScene(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             this.Components.Add(menuDuringGame);
@@ -208,7 +211,8 @@ namespace DKoFinal
                 }
             }
 
-            if(leaderBoard != null && leaderBoard.Visible)
+            /*======= Leaderboard page =======*/
+            if (leaderBoard != null && leaderBoard.Visible)
             {
                 if (ks.IsKeyDown(Keys.Escape))
                 {
@@ -244,7 +248,7 @@ namespace DKoFinal
                 }
             }
 
-            /* ================= Game Scene ================= */
+            /* ================= Game Scenes ================= */
             if (gameLevel1.Visible)
             {
                 if (ks.IsKeyDown(Keys.Escape))
@@ -405,7 +409,7 @@ namespace DKoFinal
                 }
             }
 
-            // Recording the elapsed time since the game started.
+            // Recording the elapsed time since the game started until game is over/cleared.
             if (isGameStarted && !isGamePaused && !isGameEnded)
             { 
                 gamePlayedTime += gameTime.ElapsedGameTime;
@@ -423,6 +427,8 @@ namespace DKoFinal
             base.Draw(gameTime);
         }
 
+        /* <<<<<<<<<<<<<<< Customized Methods >>>>>>>>>>>>>>> */
+
         public void HideAllScenes()
         {
             foreach (GameScene scene in this.Components)
@@ -431,6 +437,7 @@ namespace DKoFinal
             }
         }
 
+        /* ================= Return gameResult message depending on game status (game over / game clear) ================= */
         public string GetGameResultMessage()
         {
             string gameTimeResult;
@@ -447,6 +454,7 @@ namespace DKoFinal
             return gameTimeResult;
         }
 
+        /* ================= Stop the current music played and play the input music repeating ================= */
         public void PlayBackgroundMusic(Song backgroundMusic)
         {
             MediaPlayer.Stop();
@@ -454,6 +462,7 @@ namespace DKoFinal
             MediaPlayer.IsRepeating = true;
         }
 
+        /* ================= Convert List<ScoreRecord> data to string data so that it can be shown on the screen ================= */
         public string ConvertToString(List<ScoreRecord> scores)
         {
             StringBuilder sb = new StringBuilder();

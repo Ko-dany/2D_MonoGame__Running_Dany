@@ -8,6 +8,9 @@ namespace DKoFinal.Database
 {
     public class ScoreRecordManager
     {
+        /* ================= Score Record Manager ================= */
+        /* This class manages reading records from & writing records to txt file using File I/O */
+
         private string filePath;
         private List<ScoreRecord> scoreRecords;
 

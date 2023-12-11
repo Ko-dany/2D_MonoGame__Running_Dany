@@ -87,6 +87,7 @@ namespace DKoFinal.Renderers
         {
             KeyboardState ks = Keyboard.GetState();
 
+            /* ============= Player character jumps when Space is pressed ============= */
             if (ks.IsKeyDown(Keys.Space) && !isJumping)
             {
                 playerJumpSound.Play();
@@ -94,6 +95,7 @@ namespace DKoFinal.Renderers
                 isJumping = true;
             }
 
+            /* ============= Player character moves when Left/Right is pressed ============= */
             if (ks.IsKeyDown(Keys.Left))
             {
                 position.X -= speed;
@@ -105,6 +107,7 @@ namespace DKoFinal.Renderers
                 spriteEffects = SpriteEffects.None;
             }
 
+            /* ============= Player character flies while Left Ctrl is pressed ============= */
             if (ks.IsKeyDown(Keys.LeftControl) && !isIdle && !isJumping)
             {
                 isIdle = true;
