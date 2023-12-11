@@ -21,14 +21,14 @@ namespace DKoFinal.Renderers
         SpriteEffects spriteEffect;
         float layerDepth;
 
-        public Text(Game game, string text, SpriteBatch spriteBatch, SpriteFont spriteFont, Vector2 position) : base(game)
+        public Text(Game game, string text, SpriteBatch spriteBatch, SpriteFont spriteFont, Vector2 position, Color color) : base(game)
         {
             this.gameResult = text;
             this.spriteBatch = spriteBatch;
             this.spriteFont = spriteFont;
             this.position = position;
 
-            color = Color.Black;
+            this.color = color;
             origin = new Vector2(spriteFont.MeasureString(text).X / 2, spriteFont.LineSpacing / 2);
             rotation = 0.0f;
             scale = 1.0f;

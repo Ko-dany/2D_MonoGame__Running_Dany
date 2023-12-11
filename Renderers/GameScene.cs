@@ -17,12 +17,14 @@ namespace DKoFinal.Renderers
             Hide();
         }
 
+        /* ============= Hide the scene from the game ============= */
         public virtual void Hide()
         {
             Visible = false;
             Enabled = false;
         }
 
+        /* ============= Display the scene from the game ============= */
         public virtual void Display()
         {
             Visible = true;

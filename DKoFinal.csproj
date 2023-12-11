@@ -9,8 +9,16 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <ApplicationIcon>Icon.ico</ApplicationIcon>
+    <ApplicationIcon>gameIcon.ico</ApplicationIcon>
+    <Title>RunningDany</Title>
+    <Authors>Dahyeon Dany Ko</Authors>
+    <Company>Conestoga College</Company>
+    <Product>Running Dany</Product>
+    <Description>Running Dany inspired with Flappy Bird</Description>
   </PropertyGroup>
+  <ItemGroup>
+    <Content Include="gameIcon.ico" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.1.303" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />

@@ -17,28 +17,26 @@ namespace DKoFinal.Scenes
     {
         SpriteBatch spriteBatch;
 
-        Obstacle obstacle;
         ObstacleCollision obstacleCollision;
-
-        CheckpointAnimation checkpoint;
         CheckpointCollision checkpointCollision;
-
-        Terrain terrain;
         TerrainCollision terrainCollision;
 
-        bool gameOver = false;
-        bool gameClear = false;
+        bool gameOver;
+        bool gameClear;
 
         public GameLevel1(Game game, int backgroundWidth, int backgroundHeight) : base(game)
         {
             DkoFinal dkoFinal = (DkoFinal)game;
+            spriteBatch = dkoFinal.spriteBatch;
+
+            /* ============= Load image & font content ============= */
             Texture2D mainBackgroundImg = dkoFinal.Content.Load<Texture2D>("Level1/Yellow");
             Texture2D obstacleImage = dkoFinal.Content.Load<Texture2D>("Level1/SpikeHead");
-
             Texture2D horizontalTexture = dkoFinal.Content.Load<Texture2D>("Level1/Spikes");
             Texture2D verticalTexture = dkoFinal.Content.Load<Texture2D>("Level1/Spikes_Vertical");
 
-            spriteBatch = dkoFinal.spriteBatch;
+            gameOver = false;
+            gameClear = false;
 
             /*============ Add background component ============*/
             Background mainBackground = new Background(dkoFinal, spriteBatch, mainBackgroundImg, backgroundWidth,  backgroundHeight);
@@ -70,7 +68,7 @@ namespace DKoFinal.Scenes
                     Vector2 randomPosition = new Vector2(newObstacleBounds.X, newObstacleBounds.Y);
                     Vector2 randomSpeed = new Vector2(random.Next(3, 5), 0);
 
-                    obstacle = new Obstacle(dkoFinal, spriteBatch, obstacleImage, 1.8f, randomPosition, randomSpeed, 4, backgroundWidth, backgroundHeight);
+                    Obstacle obstacle = new Obstacle(dkoFinal, spriteBatch, obstacleImage, 1.8f, randomPosition, randomSpeed, 4, backgroundWidth, backgroundHeight);
                     obstacles.Add(obstacle);
                     this.Components.Add(obstacle);
 
@@ -81,14 +79,13 @@ namespace DKoFinal.Scenes
             this.Components.Add(obstacleCollision);
 
             /*============ Add terrain component & terrain collision manager ============*/
-            terrain = new Terrain(dkoFinal, spriteBatch, horizontalTexture, new Vector2(0, -horizontalTexture.Height), new Vector2(0, backgroundHeight + horizontalTexture.Height), new Vector2(horizontalTexture.Width, -horizontalTexture.Height), new Vector2(horizontalTexture.Width, backgroundHeight + horizontalTexture.Height), verticalTexture, new Vector2(-verticalTexture.Width,0), new Vector2(backgroundWidth * (stages + 1) + backgroundWidth / 2, 0));
+            Terrain terrain = new Terrain(dkoFinal, spriteBatch, horizontalTexture, new Vector2(0, -horizontalTexture.Height), new Vector2(0, backgroundHeight + horizontalTexture.Height), new Vector2(horizontalTexture.Width, -horizontalTexture.Height), new Vector2(horizontalTexture.Width, backgroundHeight + horizontalTexture.Height), verticalTexture, new Vector2(-verticalTexture.Width,0), new Vector2(backgroundWidth * (stages + 1) + backgroundWidth / 2, 0));
             this.Components.Add(terrain);
-
             terrainCollision = new TerrainCollision(dkoFinal, player, terrain);
             this.Components.Add(terrainCollision);
 
             /*============ Add checkpoint component & checkpoint collision manager ============*/
-            checkpoint = new CheckpointAnimation(dkoFinal, spriteBatch, new Vector2(backgroundWidth * (stages+1) + backgroundWidth / 3, backgroundHeight / 2));
+            CheckpointAnimation checkpoint = new CheckpointAnimation(dkoFinal, spriteBatch, new Vector2(backgroundWidth * (stages+1) + backgroundWidth / 3, backgroundHeight / 2));
             this.Components.Add(checkpoint);
             checkpointCollision = new CheckpointCollision(dkoFinal, player, checkpoint);
             this.Components.Add(checkpointCollision);
@@ -96,7 +93,6 @@ namespace DKoFinal.Scenes
 
         public override void Update(GameTime gameTime)
         {
-            // Whenever collision to obstacles or ground is detected, returns gameOver = true;
             if(terrainCollision.DetectCollision() || obstacleCollision.DetectCollision()) { gameOver = true; }
             if (checkpointCollision.DetectCollision()) { gameClear = true; }
 
@@ -111,16 +107,7 @@ namespace DKoFinal.Scenes
             base.Draw(gameTime);
         }
 
-        public bool CheckGameOver()
-        {
-            return gameOver;
-        }
-
-        public bool CheckGameClear()
-        {
-            return gameClear;
-        }
-
+        /*============ Check if newly generated object collides with existing ones ============*/
         bool ObstacleOverlaps(Rectangle newObstacle, List<Rectangle> existingObstacles)
         {
             foreach (var obstacle in existingObstacles)
@@ -132,5 +119,17 @@ namespace DKoFinal.Scenes
             }
             return false;
         }
+
+        public bool CheckGameOver()
+        {
+            return gameOver;
+        }
+
+        public bool CheckGameClear()
+        {
+            return gameClear;
+        }
+
+
     }
 }

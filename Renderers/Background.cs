@@ -10,6 +10,8 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.Taskbar;
 
 namespace DKoFinal.Renderers
 {
+
+    
     public class Background : DrawableGameComponent
     {
         SpriteBatch spriteBatch;

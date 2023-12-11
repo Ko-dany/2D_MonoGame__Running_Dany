@@ -13,59 +13,46 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.Taskbar;
 
 namespace DKoFinal.Scenes
 {
-    public class GameCleared : GameScene
+    public class GameClearedScene : GameScene
     {
         SpriteBatch spriteBatch;
-        SpriteFont regular, selected;
-        int backgroundWidth;
-        int backgroundHeight;
-
-        Texture2D resultBackgroundImg;
-        Background resultBackground;
-
-        Text resultText;
-        MenuSelection menuSelection;
-
         Text playerNameText;
 
-        StringBuilder playerName = new StringBuilder();
+        StringBuilder playerName;
         const int MaxNameLength = 3;
 
         KeyboardState oldState;
 
-
-        public GameCleared(Game game, string gameResult, int backgroundWidth, int backgroundHeight) : base(game)
+        public GameClearedScene(Game game, string gameResult, int backgroundWidth, int backgroundHeight) : base(game)
         {
             DkoFinal dkoFinal = (DkoFinal)game;
             spriteBatch = dkoFinal.spriteBatch;
-            selected = dkoFinal.Content.Load<SpriteFont>("Fonts/selected");
-            regular = dkoFinal.Content.Load<SpriteFont>("Fonts/regular");
-            resultBackgroundImg = dkoFinal.Content.Load<Texture2D>("Level1/Pink");
 
+            /* ============= Load image & font content ============= */
+            SpriteFont regular = dkoFinal.Content.Load<SpriteFont>("Fonts/regular");
+            Texture2D resultBackgroundImg = dkoFinal.Content.Load<Texture2D>("Level1/Pink");
+
+            playerName = new StringBuilder();
             Vector2 position = new Vector2(backgroundWidth / 2, backgroundHeight / 2);
-
-            this.backgroundWidth = backgroundWidth;
-            this.backgroundHeight = backgroundHeight;
-
-            resultBackground = new Background(dkoFinal, spriteBatch, resultBackgroundImg, backgroundWidth, backgroundHeight);
-            this.Components.Add(resultBackground);
-
-            resultText = new Text(dkoFinal, gameResult, spriteBatch, regular, new Vector2(backgroundWidth/2, backgroundHeight / 3));
-            this.Components.Add(resultText);
-
-            playerNameText = new Text(dkoFinal, $"Player Name: {playerName}", spriteBatch, regular, position);
-            this.Components.Add(playerNameText);
-
             oldState = Keyboard.GetState();
 
-            //menuSelection = new MenuSelection(dkoFinal, spriteBatch, regular, selected, new Vector2(backgroundWidth / 2, backgroundHeight / 5 * 3), Color.White, Color.Black, new string[] { "BACK TO MAIN", "ABOUT", "EXIT" });
-            //this.Components.Add(menuSelection);
+            /*============ Add background component ============*/
+            Background resultBackground = new Background(dkoFinal, spriteBatch, resultBackgroundImg, backgroundWidth, backgroundHeight);
+            this.Components.Add(resultBackground);
+
+            /*============ Add text component ============*/
+            Text resultText = new Text(dkoFinal, gameResult, spriteBatch, regular, new Vector2(backgroundWidth/2, backgroundHeight / 3), Color.Black);
+            this.Components.Add(resultText);
+
+            playerNameText = new Text(dkoFinal, $"Player Name: {playerName}", spriteBatch, regular, position, Color.Black);
+            this.Components.Add(playerNameText);
         }
 
         public override void Update(GameTime gameTime)
         {
             KeyboardState ks = Keyboard.GetState();
 
+            /*============ When key(A-Z) is pressed, update the playerName shown on the scene. ============*/
             for (Keys key = Keys.A; key <= Keys.Z; key++)
             {
                 if (ks.IsKeyDown(key) && !oldState.IsKeyDown(key))
@@ -76,6 +63,7 @@ namespace DKoFinal.Scenes
                 }
             }
 
+            /*============ When backspace is pressed, remove one chracter from the playerName shown on the scene. ============*/
             if (ks.IsKeyDown(Keys.Back) && playerName.Length > 0 && !oldState.IsKeyDown(Keys.Back))
             {
                 playerName.Length--;
@@ -93,11 +81,6 @@ namespace DKoFinal.Scenes
             spriteBatch.End();
 
             base.Draw(gameTime);
-        }
-
-        public int GetSelectedIndex()
-        {
-            return menuSelection.selectedIndex;
         }
 
         public string GetPlayerName()

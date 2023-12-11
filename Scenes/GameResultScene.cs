@@ -14,35 +14,28 @@ namespace DKoFinal.Scenes
     public class GameResultScene : GameScene
     {
         SpriteBatch spriteBatch;
-        SpriteFont regular, selected;
-        string gameResult;
-        Vector2 position;
-
-        Texture2D resultBackgroundImg;
-        Background resultBackground;
-
-        Text resultText;
         MenuSelection menuSelection;
 
         public GameResultScene(Game game, string gameResult, int backgroundWidth, int backgroundHeight) : base(game)
         {
-            this.gameResult = gameResult;
-
             DkoFinal dkoFinal = (DkoFinal)game;
             spriteBatch = dkoFinal.spriteBatch;
-            selected = dkoFinal.Content.Load<SpriteFont>("Fonts/selected");
-            regular = dkoFinal.Content.Load<SpriteFont>("Fonts/regular");
-            position = new Vector2(backgroundWidth/2, backgroundHeight/2);
 
-            resultBackgroundImg = dkoFinal.Content.Load<Texture2D>("MainScene/Blue");
-            resultBackground = new Background(dkoFinal, spriteBatch, resultBackgroundImg, backgroundWidth, backgroundHeight);
+            /* ============= Load image & font content ============= */
+            SpriteFont selected = dkoFinal.Content.Load<SpriteFont>("Fonts/selected");
+            SpriteFont regular = dkoFinal.Content.Load<SpriteFont>("Fonts/regular");
+            Texture2D resultBackgroundImg = dkoFinal.Content.Load<Texture2D>("MainScene/Blue");
+            Background resultBackground = new Background(dkoFinal, spriteBatch, resultBackgroundImg, backgroundWidth, backgroundHeight);
             this.Components.Add(resultBackground);
 
+            /* ============= Add text component ============= */
+            Text resultText = new Text(dkoFinal, gameResult, spriteBatch, regular, new Vector2(backgroundWidth / 2, backgroundHeight / 3), Color.Black);
+            this.Components.Add(resultText);
+
+            /* ============= Add menu selection component ============= */
             menuSelection = new MenuSelection(dkoFinal, spriteBatch, regular, selected, new Vector2(backgroundWidth / 2, backgroundHeight / 5 * 3), Color.White, Color.Black, new string[] { "BACK TO MAIN", "ABOUT", "EXIT" });
             this.Components.Add(menuSelection);
 
-            resultText = new Text(dkoFinal, gameResult, spriteBatch, regular, new Vector2(backgroundWidth/2, backgroundHeight / 3));
-            this.Components.Add(resultText);
         }
         public override void Draw(GameTime gameTime)
         {
@@ -52,14 +45,10 @@ namespace DKoFinal.Scenes
             base.Draw(gameTime);
         }
 
-        public void InputGameResult(string gameResult)
-        {
-            this.gameResult = gameResult;
-        }
-
         public int GetSelectedIndex()
         {
             return menuSelection.selectedIndex;
         }
+
     }
 }

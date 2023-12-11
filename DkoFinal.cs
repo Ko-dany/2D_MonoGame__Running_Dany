@@ -1,4 +1,11 @@
-﻿using DKoFinal.Database;
+﻿/*
+ * Program: PROG2370-SEC4
+ * Purpose: Final Project
+ * Revision History:
+ *      created by Dahyun Ko, Dec/10/2023
+ */
+
+using DKoFinal.Database;
 using DKoFinal.Renderers;
 using DKoFinal.Scenes;
 using Microsoft.Xna.Framework;
@@ -27,8 +34,8 @@ namespace DKoFinal
         GameLevel3 gameLevel3;
         MenuDuringGameScene menuDuringGame;
         GameResultScene gameResult;
-        GameCleared gameClearedScene;
-        LearderboardScene learderboard;
+        GameClearedScene gameClearedScene;
+        LeaderBoardScene leaderBoard;
 
         /*======= Game states & scores =======*/
         bool isGameStarted;
@@ -63,7 +70,7 @@ namespace DKoFinal
 
         protected override void Initialize()
         {
-            isGameStarted = true;
+            isGameStarted = false;
             isGamePaused = false;
             isGameEnded = false;
             gameScore = 0.00;
@@ -98,12 +105,12 @@ namespace DKoFinal
 
             mainScene = new MainScene(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, hasScores);
             this.Components.Add(mainScene);
-            //mainScene.Display();
+            mainScene.Display();
 
             helpScene = new HelpScene(this);
             this.Components.Add(helpScene);
 
-            aboutScene = new AboutScene(this);
+            aboutScene = new AboutScene(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             this.Components.Add(aboutScene);
 
             gameLevel1 = new GameLevel1(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
@@ -114,7 +121,7 @@ namespace DKoFinal
 
             gameLevel3 = new GameLevel3(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             this.Components.Add(gameLevel3);
-            gameLevel3.Display();
+            //gameLevel3.Display();
 
             menuDuringGame = new MenuDuringGameScene(this, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             this.Components.Add(menuDuringGame);
@@ -132,17 +139,7 @@ namespace DKoFinal
                     PlayBackgroundMusic(mainBackgroundMusic);
                     mainBackgroundMusicPlaying = true;
                     gameBackgroundMusicPlaying = false;
-                }
-
-                /*
-                if (hasScores)
-                {
-                    // Extra score board
-                    string scoreMsg = ConvertToString(scores);
-                    Text leaderBoard = new Text(this, scoreMsg, spriteBatch, Content.Load<SpriteFont>("Fonts/regular"), new Vector2(20, 20));
-                    this.Components.Add(leaderBoard);
-                }
-                */
+                }                                                                    
 
                 if (ks.IsKeyDown(Keys.Enter) && oldState.IsKeyUp(Keys.Enter))
                 {
@@ -190,9 +187,9 @@ namespace DKoFinal
                                 isGameStarted = true;
                                 break;
                             case 1:
-                                learderboard = new LearderboardScene(this, ConvertToString(scores), graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
-                                this.Components.Add(learderboard);
-                                learderboard.Display();
+                                leaderBoard = new LeaderBoardScene(this, ConvertToString(scores), graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+                                this.Components.Add(leaderBoard);
+                                leaderBoard.Display();
                                 break;
                             case 2:
                                 helpScene.Display();
@@ -211,7 +208,7 @@ namespace DKoFinal
                 }
             }
 
-            if(learderboard != null && learderboard.Visible)
+            if(leaderBoard != null && leaderBoard.Visible)
             {
                 if (ks.IsKeyDown(Keys.Escape))
                 {
@@ -325,7 +322,7 @@ namespace DKoFinal
                     isGameEnded = true;
                     isGameCleared = true;
 
-                    gameClearedScene = new GameCleared(this, GetGameResultMessage(), graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+                    gameClearedScene = new GameClearedScene(this, GetGameResultMessage(), graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
                     this.Components.Add(gameClearedScene);
                     gameClearedScene.Display();
                 }
@@ -469,5 +466,6 @@ namespace DKoFinal
 
             return sb.ToString();
         }
+
     }
 }

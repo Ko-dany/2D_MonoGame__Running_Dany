@@ -20,18 +20,19 @@ namespace DKoFinal.Scenes
 
         ObstacleCollision spikeHeadCollision;
         ObstacleCollision movingSawCollision;
-
-        CheckpointAnimation checkpoint;
         CheckpointCollision checkpointCollision;
-        Terrain terrain;
         TerrainCollision terrainCollision;
 
-        bool gameOver = false;
-        bool gameClear = false;
+        bool gameOver;
+        bool gameClear;
 
         public GameLevel2(Game game, int backgroundWidth, int backgroundHeight) : base(game)
         {
             DkoFinal dkoFinal = (DkoFinal)game;
+            spriteBatch = dkoFinal.spriteBatch;
+
+            /* ============= Load image & font content ============= */
+
             Texture2D mainBackgroundImg = dkoFinal.Content.Load<Texture2D>("Level1/Green");
             Texture2D spikeHeadImage = dkoFinal.Content.Load<Texture2D>("Level1/SpikeHead");
             Texture2D MovingSawImage = dkoFinal.Content.Load<Texture2D>("Level1/MovingSaw");
@@ -39,33 +40,32 @@ namespace DKoFinal.Scenes
             Texture2D horizontalTexture = dkoFinal.Content.Load<Texture2D>("Level1/Spikes");
             Texture2D verticalTexture = dkoFinal.Content.Load<Texture2D>("Level1/Spikes_Vertical");
 
+            gameOver = false;
+            gameClear = false;
 
-            spriteBatch = dkoFinal.spriteBatch;
-
-            // Add background component
+            /*============ Add background component ============*/
             Background mainBackground = new Background(dkoFinal, spriteBatch, mainBackgroundImg, backgroundWidth,  backgroundHeight);
             this.Components.Add(mainBackground);
 
-            // Add player character component
+            /*============ Add player character component ============*/
             PlayerCharacter player = new PlayerCharacter(dkoFinal, spriteBatch, backgroundWidth, backgroundHeight);
             this.Components.Add(player);
 
-            
+            /*============ Generate random obstacle components & obstacle collision managers ============*/
             Random random = new Random();
             const int stages = 5;
             const int spikeHeadsCount = 4;
             const int movingSawsCount = 4;
 
-            /*============ Generate random obstacle components & obstacle collision managers ============*/
             List<Obstacle> spikeHeads = new List<Obstacle>();
             List<Rectangle> spikeHeadBounds = new List<Rectangle>();
 
             List<Obstacle> movingSaws = new List<Obstacle>();
             List<Rectangle> movingSawBounds = new List<Rectangle>();
-            Vector2 randomSpeed2 = new Vector2(random.Next(3, 5), random.Next(3, 5));
+
             for (int k = 1; k <= stages; k++)
             {
-                /*============ Spike Heads ============*/
+                /*============ Generate Spike Heads ============*/
                 for (int i = 0; i < spikeHeadsCount; i++)
                 {
                     Rectangle newSpikeHeadsBounds = new Rectangle(random.Next(backgroundWidth * k, backgroundWidth * (k + 1)), random.Next(0, backgroundHeight - spikeHeadImage.Height), spikeHeadImage.Width, spikeHeadImage.Height);
@@ -86,7 +86,7 @@ namespace DKoFinal.Scenes
                     spikeHeadBounds.Add(newSpikeHeadsBounds);
                 }
 
-                /*============ Moving saws ============*/
+                /*============ Generate Moving saws ============*/
                 for (int i = 0; i < movingSawsCount; i++)
                 {
                     Rectangle newSawsBounds = new Rectangle(random.Next(backgroundWidth * k, backgroundWidth * (k + 1)), random.Next(0, backgroundHeight - MovingSawImage.Height), MovingSawImage.Width, MovingSawImage.Height);
@@ -109,20 +109,17 @@ namespace DKoFinal.Scenes
             }
             spikeHeadCollision = new ObstacleCollision(dkoFinal, player, spikeHeads);
             this.Components.Add(spikeHeadCollision);
-
-
             movingSawCollision = new ObstacleCollision(dkoFinal, player, movingSaws);
             this.Components.Add(movingSawCollision);
 
             /*============ Add terrain component & terrain collision manager ============*/
-            terrain = new Terrain(dkoFinal, spriteBatch, horizontalTexture, new Vector2(0, -horizontalTexture.Height), new Vector2(0, backgroundHeight + horizontalTexture.Height), new Vector2(horizontalTexture.Width, -horizontalTexture.Height), new Vector2(horizontalTexture.Width, backgroundHeight + horizontalTexture.Height), verticalTexture, new Vector2(-verticalTexture.Width, 0), new Vector2(backgroundWidth * (stages + 1) + backgroundWidth / 2, 0));
+            Terrain terrain = new Terrain(dkoFinal, spriteBatch, horizontalTexture, new Vector2(0, -horizontalTexture.Height), new Vector2(0, backgroundHeight + horizontalTexture.Height), new Vector2(horizontalTexture.Width, -horizontalTexture.Height), new Vector2(horizontalTexture.Width, backgroundHeight + horizontalTexture.Height), verticalTexture, new Vector2(-verticalTexture.Width, 0), new Vector2(backgroundWidth * (stages + 1) + backgroundWidth / 2, 0));
             this.Components.Add(terrain);
-
             terrainCollision = new TerrainCollision(dkoFinal, player, terrain);
             this.Components.Add(terrainCollision);
 
             /*============ Add checkpoint component & checkpoint collision manager ============*/
-            checkpoint = new CheckpointAnimation(dkoFinal, spriteBatch, new Vector2(backgroundWidth * (stages + 1) + backgroundWidth / 3, backgroundHeight / 2));
+            CheckpointAnimation checkpoint = new CheckpointAnimation(dkoFinal, spriteBatch, new Vector2(backgroundWidth * (stages + 1) + backgroundWidth / 3, backgroundHeight / 2));
             this.Components.Add(checkpoint);
             checkpointCollision = new CheckpointCollision(dkoFinal, player, checkpoint);
             this.Components.Add(checkpointCollision);
@@ -130,9 +127,6 @@ namespace DKoFinal.Scenes
 
         public override void Update(GameTime gameTime)
         {
-            //movingSaw1 -= speed;
-
-            // Whenever collision to obstacles or ground is detected, returns gameOver = true;
             if (terrainCollision.DetectCollision() || spikeHeadCollision.DetectCollision() || movingSawCollision.DetectCollision()) { gameOver = true; }
             if (checkpointCollision.DetectCollision()) { gameClear = true; }
 
@@ -167,5 +161,6 @@ namespace DKoFinal.Scenes
             }
             return false;
         }
+
     }
 }
