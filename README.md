@@ -28,4 +28,6 @@
 
 ## Game Preview
 
-![game_play_low_size](https://github.com/Ko-dany/2D_MonoGame__Running_Dany/assets/88699158/ee57161d-1122-4c9d-aa11-e32364b514e3)
+<p align="center">
+<img src="preview/game_play_low_size.gif">
+</p>
